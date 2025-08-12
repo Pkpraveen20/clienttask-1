@@ -1,0 +1,129 @@
+{
+  "clients": [
+    {
+      "id": "9b70",
+      "name": "Theta Systems",
+      "status": "Active",
+      "startdate": "08-08-2025",
+      "enddate": "15-08-2025",
+      "address": "890,Silicon St",
+      "description": "AI and Automation"
+    },
+    {
+      "id": "a4d2",
+      "name": "NovaCore Tech",
+      "status": "Inactive",
+      "startdate": "05-07-2025",
+      "enddate": "20-07-2025",
+      "address": "412, Quantum Ave",
+      "description": "Cloud Computing Solutions"
+    },
+    {
+      "id": "c8f1",
+      "name": "AeroByte Labs",
+      "status": "Active",
+      "startdate": "12-09-2025",
+      "enddate": "25-09-2025",
+      "address": "76, Orbit Road",
+      "description": "Aerospace Software Development"
+    }
+  ],
+  "roles": [
+    {
+      "id": "117d",
+      "rolename": "Analsyt",
+      "roletype": "Business",
+      "rolestatus": "Active",
+      "rolestartdate": "06-08-2025",
+      "roleenddate": "15-08-2025",
+      "roledescription": "Analyzes data trends"
+    },
+    {
+      "id": "2fa9",
+      "rolename": "Project Manager",
+      "roletype": "Management",
+      "rolestatus": "Inactive",
+      "rolestartdate": "10-02-2025",
+      "roleenddate": "25-03-2025",
+      "roledescription": "Oversees project timelines and deliverables"
+    },
+    {
+      "id": "8bc3",
+      "rolename": "Software Engineer",
+      "roletype": "Technical",
+      "rolestatus": "Active",
+      "rolestartdate": "18-08-2025",
+      "roleenddate": "30-08-2025",
+      "roledescription": "Develops and maintains software applications"
+    }
+  ],
+  "functionalarea": [
+    {
+      "id": "4cf6",
+      "functionalname": "Marketing",
+      "functionaltype": "Core",
+      "functionalstatus": "Active",
+      "functionalstartdate": "12-08-2025",
+      "functionalenddate": "21-08-2025",
+      "functionaldescription": "Handles promotions and branding",
+      "functionalclient": [
+        "Theta Systems"
+      ]
+    },
+    {
+      "id": "7b92",
+      "functionalname": "Product Development",
+      "functionaltype": "Core",
+      "functionalstatus": "Inactive",
+      "functionalstartdate": "01-03-2025",
+      "functionalenddate": "15-04-2025",
+      "functionaldescription": "Designs and develops new products",
+      "functionalclient": [
+        "Theta Systems"
+      ]
+    },
+    {
+      "id": "e6a4",
+      "functionalname": "Customer Support",
+      "functionaltype": "Support",
+      "functionalstatus": "Active",
+      "functionalstartdate": "20-08-2025",
+      "functionalenddate": "05-09-2025",
+      "functionaldescription": "Provides assistance to clients",
+      "functionalclient": [
+        "AeroByte Labs"
+      ]
+    }
+  ],
+  "permission": [
+    {
+      "id": "f093",
+      "permissionname": "Edit Users",
+      "permissionstatus": "Active",
+      "permissionstartdate": "13-08-2025",
+      "permissionenddate": "15-08-2025",
+      "permissiondefinition": "Can edit users details",
+      "permissionclient": [
+        "AeroByte Labs"
+      ],
+      "permissionrole": [
+        "Software Engineer"
+      ]
+    },
+    {
+      "id": "b68e",
+      "permissionname": "functional change",
+      "permissionstatus": "Active",
+      "permissionstartdate": "11-08-2025",
+      "permissionenddate": "13-08-2025",
+      "permissiondefinition": "EOD",
+      "permissionclient": [
+        "Theta Systems"
+      ],
+      "permissionrole": [
+        "Analsyt",
+        "Software Engineer"
+      ]
+    }
+  ]
+}
