@@ -71,8 +71,6 @@ export default function EngagementTable() {
     filtered.sort((a, b) => {
       let aValue: any = a[sortKey as keyof Engagement];
       let bValue: any = b[sortKey as keyof Engagement];
-
-      // Handle date-time sorting
       if (sortKey === "primaryDateTime") {
         aValue = a.primaryDateTime.date + a.primaryDateTime.time;
         bValue = b.primaryDateTime.date + b.primaryDateTime.time;
@@ -121,7 +119,6 @@ export default function EngagementTable() {
         />
       </div>
 
-      {/* Form Modal */}
       {showForm && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
           <div className="relative bg-white rounded-xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-y-auto p-8 border border-gray-100 animate-fadeIn">

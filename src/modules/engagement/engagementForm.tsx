@@ -45,7 +45,6 @@ export default function EngagementForm({ onClose }: EngagementFormProps) {
     },
   });
 
-  // Update selected slots whenever any date-time field changes
   useEffect(() => {
     const slots: DateTimeSlot[] = [];
     if (form.primaryDateTime.date && form.primaryDateTime.time) {
@@ -65,7 +64,6 @@ export default function EngagementForm({ onClose }: EngagementFormProps) {
   ) {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
-    // Clear error when user starts typing
     if (errors[name]) {
       setErrors((prev) => ({ ...prev, [name]: "" }));
     }
@@ -268,7 +266,6 @@ export default function EngagementForm({ onClose }: EngagementFormProps) {
           )}
         </div>
 
-        {/* Secondary Date-Time */}
         <div className="border border-gray-200 rounded-lg p-4">
           <div className="flex justify-between items-center mb-3">
             <h4 className="text-md font-medium text-gray-700">
@@ -302,7 +299,6 @@ export default function EngagementForm({ onClose }: EngagementFormProps) {
           )}
         </div>
 
-        {/* Tertiary Date-Time */}
         <div className="border border-gray-200 rounded-lg p-4">
           <div className="flex justify-between items-center mb-3">
             <h4 className="text-md font-medium text-gray-700">
@@ -337,14 +333,12 @@ export default function EngagementForm({ onClose }: EngagementFormProps) {
         </div>
       </div>
 
-      {/* Error for duplicate slots */}
       {errors.duplicateSlots && (
         <div className="p-3 bg-red-50 border border-red-200 rounded-md">
           <p className="text-red-500 text-sm">{errors.duplicateSlots}</p>
         </div>
       )}
 
-      {/* Form Actions */}
       <div className="flex gap-3 justify-end pt-4">
         <button
           type="button"

@@ -27,20 +27,17 @@ export default function DateTimePicker({
   const [selectedTime, setSelectedTime] = useState<string>(value?.time || '');
   const [selectedTimezone, setSelectedTimezone] = useState<string>(value?.timezone || 'ET');
 
-  // Check if a time slot is disabled
   const isTimeSlotDisabled = (time: string) => {
     if (!selectedDate) return false;
     
     const dateStr = selectedDate.toISOString().split('T')[0];
     
-    // Check if this exact slot is already selected
     const isExactMatch = disabledSlots.some(slot => 
       slot.date === dateStr && slot.time === time && slot.timezone === selectedTimezone
     );
     
     if (isExactMatch) return true;
     
-    // Check for 30-minute buffer before and after
     const currentTime = DateTime.fromFormat(time, 'HH:mm');
     return disabledSlots.some(slot => {
       if (slot.date !== dateStr || slot.timezone !== selectedTimezone) return false;
@@ -51,7 +48,6 @@ export default function DateTimePicker({
     });
   };
 
-  // Update the parent component when any value changes
   useEffect(() => {
     if (selectedDate && selectedTime && selectedTimezone) {
       const newSlot: DateTimeSlot = {
@@ -67,7 +63,6 @@ export default function DateTimePicker({
     }
   }, [selectedDate, selectedTime, selectedTimezone, onChange, onSlotChange]);
 
-  // Update local state when value prop changes
   useEffect(() => {
     if (value) {
       setSelectedDate(value.date ? new Date(value.date) : null);
@@ -107,7 +102,6 @@ export default function DateTimePicker({
       </label>
       
       <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-        {/* Date Picker */}
         <div>
           <DatePicker
             selected={selectedDate}
@@ -119,7 +113,6 @@ export default function DateTimePicker({
           />
         </div>
 
-        {/* Time Dropdown */}
         <div>
           <select
             value={selectedTime}
@@ -140,7 +133,6 @@ export default function DateTimePicker({
           </select>
         </div>
 
-        {/* Timezone Dropdown */}
         <div>
           <select
             value={selectedTimezone}
@@ -156,7 +148,6 @@ export default function DateTimePicker({
         </div>
       </div>
 
-      {/* Display selected slot */}
       {value && (
         <div className="mt-2 p-2 bg-blue-50 border border-blue-200 rounded-md">
           <p className="text-sm text-blue-800">
