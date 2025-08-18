@@ -14,12 +14,15 @@
     "@tanstack/react-router": "^1.131.5",
     "axios": "^1.11.0",
     "lucide-react": "^0.539.0",
+    "luxon": "^3.7.1",
     "react": "^19.1.1",
+    "react-datepicker": "^8.5.0",
     "react-dom": "^19.1.1",
     "react-select": "^5.10.2"
   },
   "devDependencies": {
     "@eslint/js": "^9.21.0",
+    "@types/luxon": "^3.7.1",
     "@types/react": "^19.0.10",
     "@types/react-dom": "^19.0.4",
     "@vitejs/plugin-react": "^4.3.4",

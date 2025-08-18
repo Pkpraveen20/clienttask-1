@@ -31,7 +31,7 @@ export default function PermissionTable() {
     }: {
       id: number;
       permissionstatus: string;
-    }) =>
+    }) =>                                                             
       axios.patch(`http://localhost:3000/permission/${id}`, {
         permissionstatus,
       }),
@@ -52,7 +52,7 @@ export default function PermissionTable() {
 
   function getStatus(role: any) {
     const today = new Date();
-    today.setHours(0, 0, 0, 0);
+    today.setHours(0, 0, 0, 0);      
 
     const permissionenddate = parseDate(role.permissionenddate);
     permissionenddate.setHours(0, 0, 0, 0);
@@ -102,7 +102,7 @@ export default function PermissionTable() {
     }
   }, [data]);
 
-  const filteredPermissions = getFilteredSortedpermission(data || []);
+  const filteredPermissions = getFilteredSortedpermission(data || []);        
   const permissionCount = filteredPermissions.length;
 
   return (
@@ -258,10 +258,10 @@ export default function PermissionTable() {
               <th className="border px-4 py-2">Role</th>
 
               <th className="border px-4 py-2"></th>
-            </tr>
+            </tr> 
           </thead>
           <tbody>
-            {filteredPermissions.map((permission: any) => (
+          {filteredPermissions.map((permission: any) => (
               <tr key={permission.id}>
                 <td className="border px-4 py-2">
                   {permission.permissionname}
@@ -271,10 +271,10 @@ export default function PermissionTable() {
                 <td className="border px-4 py-2">
                   {permission.permissionstartdate}
                 </td>
-                <td className="border px-4 py-2">
+                <td className="border px-4 py-2"> 
                   {permission.permissionenddate}
                 </td>
-                <td className="border px-4 py-2">
+                <td className="border px-4 py-2">       
                   {permission.permissiondefinition}
                 </td>
                 <td className="border px-4 py-2">
@@ -286,7 +286,7 @@ export default function PermissionTable() {
                           }
                           return String(c);
                         })
-                        .filter(Boolean)
+                        .filter(Boolean)         
                         .join(", ")
                     : String(permission.permissionclient || "")}
                 </td>
