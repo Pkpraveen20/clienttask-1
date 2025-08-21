@@ -10,7 +10,7 @@ export default function EngagementTable() {
   const [showForm, setShowForm] = useState(false);
   const [search, setSearch] = useState("");
   const [sortKey, setSortKey] = useState("id");
-  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
+  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
   const [openMenuId, setOpenMenuId] = useState<number | null>(null);
 
   // const queryClient = useQueryClient();
@@ -39,22 +39,36 @@ export default function EngagementTable() {
     navigate({ to: `/engagements/${id}` });
   }
 
-  function formatDateTimeDisplay(slot: DateTimeSlot) {
-    if (!slot.date || !slot.time) return "Not set";
+  function formatDateTimeDisplay(slot?: DateTimeSlot | DateTimeSlot[]) {
+    if (!slot) return "Not set";
 
-    const date = new Date(slot.date);
-    const [hours, minutes] = slot.time.split(":");
-    const hour = parseInt(hours);
-    const ampm = hour >= 12 ? "PM" : "AM";
-    const displayHour = hour % 12 || 12;
-    return `${date.toLocaleDateString()} ${displayHour}:${minutes} ${ampm} ${
-      slot.timezone
-    }`;
+    // handle both object and array gracefully
+    const actualSlot = Array.isArray(slot) ? slot[0] : slot;
+
+    if (!actualSlot?.date || !actualSlot?.time) return "Not set";
+
+    const dateObj = new Date(`${actualSlot.date}T${actualSlot.time}`);
+    return `${dateObj.toLocaleDateString("en-US", {
+    
+      day: "numeric",
+        month: "numeric",
+      year: "numeric",
+    })} ${dateObj.toLocaleTimeString("en-US", {
+      hour: "numeric",
+      minute: "2-digit",
+    })} ${actualSlot.timezone || ""}`;
   }
 
   function formatCreatedDateTime(dateTimeString: string) {
     const date = new Date(dateTimeString);
-    return date.toLocaleString();
+
+    return date.toLocaleString("en-US",{
+      day: "numeric",
+      month: "numeric",
+      year: "numeric",
+      hour: "numeric",
+      minute: "2-digit"
+    });
   }
 
   function getFilteredSortedEngagements(engagements: Engagement[]) {
@@ -72,8 +86,26 @@ export default function EngagementTable() {
       let aValue: any = a[sortKey as keyof Engagement];
       let bValue: any = b[sortKey as keyof Engagement];
       if (sortKey === "primaryDateTime") {
-        aValue = a.primaryDateTime.date + a.primaryDateTime.time;
-        bValue = b.primaryDateTime.date + b.primaryDateTime.time;
+        aValue = a.primaryDateTime?.[0]
+          ? `${a.primaryDateTime[0].date} ${a.primaryDateTime[0].time}`
+          : "";
+        bValue = b.primaryDateTime?.[0]
+          ? `${b.primaryDateTime[0].date} ${b.primaryDateTime[0].time}`
+          : "";
+      } else if (sortKey === "secondaryDateTime") {
+        aValue = a.secondaryDateTime
+          ? `${a.secondaryDateTime.date} ${a.secondaryDateTime.time}`
+          : "";
+        bValue = b.secondaryDateTime
+          ? `${b.secondaryDateTime.date} ${b.secondaryDateTime.time}`
+          : "";
+      } else if (sortKey === "tertiaryDateTime") {
+        aValue = a.tertiaryDateTime
+          ? `${a.tertiaryDateTime.date} ${a.tertiaryDateTime.time}`
+          : "";
+        bValue = b.tertiaryDateTime
+          ? `${b.tertiaryDateTime.date} ${b.tertiaryDateTime.time}`
+          : "";
       } else if (sortKey === "createdDateTime") {
         aValue = new Date(a.createdDateTime);
         bValue = new Date(b.createdDateTime);
@@ -154,7 +186,7 @@ export default function EngagementTable() {
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
         </div>
       ) : (
-        <div className="bg-white rounded-lg shadow overflow-hidden">
+        <div className="bg-white rounded-lg shadow overflow-y-auto">
           <table className="w-full">
             <thead className="bg-gray-50 border-b border-gray-200">
               <tr>
@@ -251,9 +283,7 @@ export default function EngagementTable() {
                     )}
                   </div>
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  
-                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"></th>
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
@@ -292,6 +322,7 @@ export default function EngagementTable() {
                       ? formatDateTimeDisplay(engagement.tertiaryDateTime)
                       : "Not set"}
                   </td>
+
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                     {formatCreatedDateTime(engagement.createdDateTime)}
                   </td>
@@ -315,7 +346,6 @@ export default function EngagementTable() {
                         >
                           View Details
                         </button>
-                        
                       </div>
                     )}
                   </td>

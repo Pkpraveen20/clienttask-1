@@ -1,4 +1,7 @@
+// import { Key } from "react";
+
 export interface DateTimeSlot {
+  // id: Key | null | undefined;
   date: string;
   time: string;
   timezone: string;
@@ -10,7 +13,7 @@ export interface Engagement {
   speaker: string;
   caterer: string;
   cohost: string;
-  primaryDateTime: DateTimeSlot;
+  primaryDateTime: DateTimeSlot[];
   secondaryDateTime?: DateTimeSlot;
   tertiaryDateTime?: DateTimeSlot;
   createdDateTime: string;

@@ -1,7 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import DatePicker from 'react-datepicker';
-import { DateTime } from 'luxon';
-import { DateTimeSlot, TIMEZONES, TIME_SLOTS } from '../modules/engagement/engagementType';
+import { useState, useEffect } from "react";
+import DatePicker from "react-datepicker";
+import { enGB } from "date-fns/locale";
+import { DateTime } from "luxon";
+import {
+  DateTimeSlot,
+  TIMEZONES,
+  TIME_SLOTS,
+} from "../modules/engagement/engagementType";
 import "react-datepicker/dist/react-datepicker.css";
 
 interface DateTimePickerProps {
@@ -10,7 +15,6 @@ interface DateTimePickerProps {
   label: string;
   required?: boolean;
   disabledSlots?: DateTimeSlot[];
-  onSlotChange?: (slot: DateTimeSlot | null) => void;
 }
 
 export default function DateTimePicker({
@@ -19,78 +23,73 @@ export default function DateTimePicker({
   label,
   required = false,
   disabledSlots = [],
-  onSlotChange
 }: DateTimePickerProps) {
-  const [selectedDate, setSelectedDate] = useState<Date | null>(
-    value?.date ? new Date(value.date) : null
-  );
-  const [selectedTime, setSelectedTime] = useState<string>(value?.time || '');
-  const [selectedTimezone, setSelectedTimezone] = useState<string>(value?.timezone || 'ET');
+  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+  const [selectedTime, setSelectedTime] = useState<string>("");
+  const [selectedTimezone, setSelectedTimezone] = useState<string>("");
 
-  const isTimeSlotDisabled = (time: string) => {
-    if (!selectedDate) return false;
-    
-    const dateStr = selectedDate.toISOString().split('T')[0];
-    
-    const isExactMatch = disabledSlots.some(slot => 
-      slot.date === dateStr && slot.time === time && slot.timezone === selectedTimezone
-    );
-    
-    if (isExactMatch) return true;
-    
-    const currentTime = DateTime.fromFormat(time, 'HH:mm');
-    return disabledSlots.some(slot => {
-      if (slot.date !== dateStr || slot.timezone !== selectedTimezone) return false;
-      
-      const slotTime = DateTime.fromFormat(slot.time, 'HH:mm');
-      const diff = Math.abs(currentTime.diff(slotTime, 'minutes').minutes);
-      return diff <= 30;
-    });
-  };
+  useEffect(() => {
+    if (value) {
+      const newDate = value.date
+        ? DateTime.fromISO(value.date, { zone: "local" }).toJSDate()
+        : null;
+
+      if (
+        newDate?.getTime() !== selectedDate?.getTime() ||
+        value.time !== selectedTime ||
+        value.timezone !== selectedTimezone
+      ) {
+        setSelectedDate(newDate);
+        setSelectedTime(value.time || "");
+        setSelectedTimezone(value.timezone || "");
+      }
+    } else {
+      if (selectedDate || selectedTime || selectedTimezone) {
+        setSelectedDate(null);
+        setSelectedTime(""); 
+        setSelectedTimezone("");
+      }
+    }
+  }, [value]);
 
   useEffect(() => {
     if (selectedDate && selectedTime && selectedTimezone) {
       const newSlot: DateTimeSlot = {
-        date: selectedDate.toISOString().split('T')[0],
+        date: DateTime.fromJSDate(selectedDate).toFormat("yyyy-MM-dd"),
         time: selectedTime,
-        timezone: selectedTimezone
+        timezone: selectedTimezone,
+        // id: undefined
       };
-      onChange(newSlot);
-      onSlotChange?.(newSlot);
-    } else {
+
+      if (
+        !value ||
+        value.date !== newSlot.date ||
+        value.time !== newSlot.time ||
+        value.timezone !== newSlot.timezone
+      ) {
+        onChange(newSlot);
+      }
+    } else if (value !== null) {
       onChange(null);
-      onSlotChange?.(null);
     }
-  }, [selectedDate, selectedTime, selectedTimezone, onChange, onSlotChange]);
+  }, [selectedDate, selectedTime, selectedTimezone]);
 
-  useEffect(() => {
-    if (value) {
-      setSelectedDate(value.date ? new Date(value.date) : null);
-      setSelectedTime(value.time || '');
-      setSelectedTimezone(value.timezone || 'ET');
-    } else {
-      setSelectedDate(null);
-      setSelectedTime('');
-      setSelectedTimezone('ET');
-    }
-  }, [value]);
+  const isTimeSlotDisabled = (time: string) => {
+    if (!selectedDate || !selectedTimezone) return false;
+    const dateStr = DateTime.fromJSDate(selectedDate).toFormat("yyyy-MM-dd");
 
-  const handleDateChange = (date: Date | null) => {
-    setSelectedDate(date);
-  };
-
-  const handleTimeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setSelectedTime(e.target.value);
-  };
-
-  const handleTimezoneChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setSelectedTimezone(e.target.value);
+    return disabledSlots.some(
+      (slot) =>
+        slot.date === dateStr &&
+        slot.time === time &&
+        slot.timezone === selectedTimezone
+    );
   };
 
   const formatTimeForDisplay = (time: string) => {
-    const [hours, minutes] = time.split(':');
-    const hour = parseInt(hours);
-    const ampm = hour >= 12 ? 'PM' : 'AM';
+    const [hours, minutes] = time.split(":");
+    const hour = parseInt(hours, 10);
+    const ampm = hour >= 12 ? "PM" : "AM";
     const displayHour = hour % 12 || 12;
     return `${displayHour}:${minutes} ${ampm}`;
   };
@@ -100,61 +99,57 @@ export default function DateTimePicker({
       <label className="block text-sm font-medium text-gray-700">
         {label} {required && <span className="text-red-500">*</span>}
       </label>
-      
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-        <div>
-          <DatePicker
-            selected={selectedDate}
-            onChange={handleDateChange}
-            dateFormat="MM/dd/yyyy"
-            placeholderText="Select date"
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            minDate={new Date()}
-          />
-        </div>
 
-        <div>
-          <select
-            value={selectedTime}
-            onChange={handleTimeChange}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            disabled={!selectedDate}
-          >
-            <option value="">Select time</option>
-            {TIME_SLOTS.map((time) => (
-              <option
-                key={time}
-                value={time}
-                disabled={isTimeSlotDisabled(time)}
-              >
-                {formatTimeForDisplay(time)}
-              </option>
-            ))}
-          </select>
-        </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <DatePicker
+          selected={selectedDate}
+          onChange={(date) => setSelectedDate(date)}
+          dateFormat="dd/MM/yyyy"
+          inline
+          calendarClassName="border border-gray-200 rounded-md p-2"
+          locale={enGB}
+          minDate={new Date()}
+        />
 
         <div>
           <select
             value={selectedTimezone}
-            onChange={handleTimezoneChange}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            onChange={(e) => setSelectedTimezone(e.target.value)}
+            className="w-full px-3 py-2 border rounded-md"
           >
+            <option value="">Select Timezone</option>
             {TIMEZONES.map((tz) => (
               <option key={tz.value} value={tz.value}>
                 {tz.label}
               </option>
             ))}
           </select>
+
+          <div className="mt-3 grid grid-cols-4 sm:grid-cols-5 lg:grid-cols-6 gap-2">
+            {TIME_SLOTS.map((time) => {
+              const disabled = isTimeSlotDisabled(time);
+              const isSelected = selectedTime === time;
+              return (
+                <button
+                  key={time}
+                  type="button"
+                  onClick={() => !disabled && setSelectedTime(time)}
+                  disabled={disabled}
+                  className={`px-3 py-2 rounded-md text-sm border ${
+                    disabled
+                      ? "bg-gray-100 text-gray-400 border-gray-200 cursor-not-allowed"
+                      : isSelected
+                      ? "bg-blue-600 text-white border-blue-600"
+                      : "bg-white text-gray-700 border-gray-300 hover:bg-blue-50"
+                  }`}
+                >
+                  {formatTimeForDisplay(time)}
+                </button>
+              );
+            })}
+          </div>
         </div>
       </div>
-
-      {value && (
-        <div className="mt-2 p-2 bg-blue-50 border border-blue-200 rounded-md">
-          <p className="text-sm text-blue-800">
-            Selected: {selectedDate?.toLocaleDateString()} at {formatTimeForDisplay(selectedTime)} {selectedTimezone}
-          </p>
-        </div>
-      )}
     </div>
   );
 }
