@@ -40,7 +40,7 @@ export default function DateInput({
           if (!e.target.value) setShowPicker(false);
         }}
         onChange={(e) => onChange(e.target.value)}
-        className="border border-gray-300 p-2 rounded w-full focus:ring-2 focus:ring-blue-200"
+        className="border border-gray-300 p-1 rounded w-full focus:ring-2 focus:ring-blue-200"
         required={required}
       />
     </div>
