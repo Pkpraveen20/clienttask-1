@@ -1,7 +1,7 @@
-// import { Key } from "react";
+import { Key } from "react";
 
 export interface DateTimeSlot {
-  // id: Key | null | undefined;
+  id: Key | null | undefined;
   date: string;
   time: string;
   timezone: string;
