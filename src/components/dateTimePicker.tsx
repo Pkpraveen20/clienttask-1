@@ -93,9 +93,7 @@ export default function DateTimePicker({
     const displayHour = hour % 12 || 12;
     return `${displayHour}:${minutes} ${ampm}`;
   };
-
-
-    
+  
   return (
   <div className="space-y-3">
     <label className="block text-sm font-medium text-gray-700">

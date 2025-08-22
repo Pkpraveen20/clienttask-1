@@ -6,11 +6,18 @@
   import DateTimePicker from "../../components/dateTimePicker";
 
   const timezoneMap: Record<string, string> = {
-    ET: "America/New_York",
-    CT: "America/Chicago",
-    PT: "America/Los_Angeles",
-    UTC: "UTC",
-  };
+  ET: "America/New_York",             
+  CT: "America/Chicago",              
+  MT: "America/Denver",               
+  PT: "America/Los_Angeles",          
+  IST: "Asia/Kolkata",                
+  GMT: "Etc/GMT",                     
+  UTC: "UTC",                         
+  CET: "Europe/Berlin",               
+  JST: "Asia/Tokyo",                  
+  AEST: "Australia/Sydney",           
+};
+
 
   function formatSlot(slot: DateTimeSlot) {
     return `${slot.date}, ${slot.time} ${slot.timezone}`;

@@ -62,7 +62,7 @@
       "id": "4cf6",
       "functionalname": "Marketing",
       "functionaltype": "Core",
-      "functionalstatus": "Active",
+      "functionalstatus": "Inactive",
       "functionalstartdate": "12-08-2025",
       "functionalenddate": "21-08-2025",
       "functionaldescription": "Handles promotions and branding",
@@ -129,253 +129,102 @@
   "engagements": [
     {
       "id": 1,
-      "engagementOwner": "ap",
+      "engagementOwner": "ajay",
       "speaker": "test1",
       "caterer": "test1",
       "cohost": "test1",
       "primaryDateTime": {
-        "date": "2025-08-21",
-        "time": "06:00",
-        "timezone": "MT",
-        "id": "620eef76-df84-44a3-a81f-0750aefd99c9"
-      },
-      "secondaryDateTime": {
-        "date": "2025-08-29",
-        "time": "06:15",
-        "timezone": "MT",
-        "id": "d7f57d2d-ae81-4cde-958e-5e907ff664c9"
-      },
-      "tertiaryDateTime": {
-        "date": "2025-08-28",
-        "time": "06:30",
-        "timezone": "MT",
-        "id": "34025abc-d50d-4dbd-b41d-f9934b175a18"
-      },
-      "createdDateTime": "2025-08-21T05:28:43.035Z"
-    },
-    {
-      "id": 2,
-      "engagementOwner": "pk",
-      "speaker": "test1",
-      "caterer": "test1",
-      "cohost": "test1",
-      "primaryDateTime": {
-        "date": "2025-08-21",
-        "time": "06:15",
+        "date": "2025-08-22",
+        "time": "10:00",
         "timezone": "ET",
-        "id": "7b7904f0-71ae-41f5-86b2-ef416f69226b"
+        "id": "54c5537e-3c3b-46dd-b64f-64b99e81de57"
       },
       "secondaryDateTime": {
-        "date": "2025-08-22",
-        "time": "07:45",
+        "date": "2025-08-23",
+        "time": "09:00",
         "timezone": "CT",
-        "id": "86dc6505-7158-4dde-b8ff-b3eda67a46a9"
-      },
-      "tertiaryDateTime": {
-        "date": "2025-08-25",
-        "time": "08:15",
-        "timezone": "PT",
-        "id": "be89c2a0-4dcf-42a2-9b8a-d212df06a58f"
-      },
-      "createdDateTime": "2025-08-21T05:29:57.420Z"
-    },
-    {
-      "id": 3,
-      "engagementOwner": "dk",
-      "speaker": "test 2",
-      "caterer": "test 2",
-      "cohost": "test 2",
-      "primaryDateTime": {
-        "date": "2025-08-21",
-        "time": "06:00",
-        "timezone": "PT",
-        "id": "232f03b8-f73b-4dc4-8570-9130e5f23bab"
-      },
-      "secondaryDateTime": {
-        "date": "2025-08-22",
-        "time": "09:30",
-        "timezone": "PT",
-        "id": "0be9b680-e8f1-46ba-8748-31ec73cf0ac2"
-      },
-      "tertiaryDateTime": {
-        "date": "2025-08-26",
-        "time": "07:45",
-        "timezone": "ET",
-        "id": "568b5055-71b6-4858-86ab-6d586831e51a"
-      },
-      "createdDateTime": "2025-08-21T07:13:29.337Z"
-    },
-    {
-      "id": 4,
-      "engagementOwner": "dks",
-      "speaker": "test 2",
-      "caterer": "test 2",
-      "cohost": "test 2",
-      "primaryDateTime": {
-        "date": "2025-08-21",
-        "time": "06:15",
-        "timezone": "CT",
-        "id": "c6258290-9ea3-49fd-87b4-8e1976d647ef"
-      },
-      "secondaryDateTime": {
-        "date": "2025-08-22",
-        "time": "07:45",
-        "timezone": "GMT",
-        "id": "42ac33fd-9b32-4909-bd5b-923680d9897b"
-      },
-      "tertiaryDateTime": {
-        "date": "2025-08-29",
-        "time": "07:45",
-        "timezone": "CT",
-        "id": "b8e9a4c8-d023-4330-b826-762b75769b5f"
-      },
-      "createdDateTime": "2025-08-21T07:18:41.067Z"
-    },
-    {
-      "id": 5,
-      "engagementOwner": "sr",
-      "speaker": "test4",
-      "caterer": "test4",
-      "cohost": "test4",
-      "primaryDateTime": {
-        "date": "2025-08-29",
-        "time": "08:15",
-        "timezone": "MT",
-        "id": "c3851740-5eed-4485-93b3-23e02cf38df7"
-      },
-      "secondaryDateTime": {
-        "date": "2025-08-21",
-        "time": "06:15",
-        "timezone": "ET",
-        "id": "a9370058-30a0-4a4e-8999-8456fafa4f0a"
-      },
-      "tertiaryDateTime": {
-        "date": "2025-08-22",
-        "time": "08:15",
-        "timezone": "CT",
-        "id": "06e5be51-37ba-4313-995a-52b4d644b9ee"
-      },
-      "createdDateTime": "2025-08-21T07:26:10.718Z"
-    },
-    {
-      "id": 6,
-      "engagementOwner": "sr",
-      "speaker": "test4",
-      "caterer": "test4",
-      "cohost": "test4",
-      "primaryDateTime": {
-        "date": "2025-08-22",
-        "time": "06:00",
-        "timezone": "ET",
-        "id": "87d7f8d1-4d5c-4f46-86ce-5c297ae261b7"
-      },
-      "secondaryDateTime": "-",
-      "tertiaryDateTime": "-",
-      "createdDateTime": "2025-08-21T07:44:11.263Z"
-    },
-    {
-      "id": 7,
-      "engagementOwner": "sr",
-      "speaker": "test4",
-      "caterer": "test4",
-      "cohost": "test4",
-      "primaryDateTime": {
-        "date": "2025-08-21",
-        "time": "06:00",
-        "timezone": "GMT",
-        "id": "1623d5f5-554a-4d14-8380-56e7bf8a0b54"
-      },
-      "secondaryDateTime": {
-        "date": "2025-08-22",
-        "time": "06:15",
-        "timezone": "CT",
-        "id": "339ad3c5-0a46-47a7-8a17-996e1bce29cf"
-      },
-      "tertiaryDateTime": {
-        "date": "2025-08-22",
-        "time": "07:30",
-        "timezone": "CT",
-        "id": "6d054100-f129-43a9-8a16-8b52b379823d"
-      },
-      "createdDateTime": "2025-08-21T09:57:23.982Z"
-    },
-    {
-      "id": 8,
-      "engagementOwner": "sr4",
-      "speaker": "test4",
-      "caterer": "test4",
-      "cohost": "test4",
-      "primaryDateTime": {
-        "date": "2025-08-21",
-        "time": "06:15",
-        "timezone": "PT",
-        "id": "6dc8c70e-1ef9-4901-b5aa-0995c40a3ae9"
-      },
-      "secondaryDateTime": {
-        "date": "2025-08-28",
-        "time": "21:30",
-        "timezone": "MT",
-        "id": "6b7bd4c0-a22a-46d8-b2eb-eefe43e8462a"
-      },
-      "tertiaryDateTime": {
-        "date": "2025-08-21",
-        "time": "07:30",
-        "timezone": "PT",
-        "id": "e99681ba-2b9b-4be9-b756-0dce9a997259"
-      },
-      "createdDateTime": "2025-08-21T13:28:35.511Z"
-    },
-    {
-      "id": 9,
-      "engagementOwner": "sr4",
-      "speaker": "test4",
-      "caterer": "test4",
-      "cohost": "test4",
-      "primaryDateTime": {
-        "date": "2025-08-22",
-        "time": "07:30",
-        "timezone": "CT",
-        "id": "0d0d4806-33d2-419a-975f-f329f799e3af"
-      },
-      "secondaryDateTime": {
-        "date": "2025-08-22",
-        "time": "06:30",
-        "timezone": "MT",
-        "id": "80127953-452a-4a5c-b3e4-4c2ba27b96b3"
+        "id": "86d717aa-c26f-4dcb-9186-4e1f37cacda8"
       },
       "tertiaryDateTime": {
         "date": "2025-08-23",
-        "time": "09:00",
-        "timezone": "MT",
-        "id": "87e9fdf8-7658-43b2-b994-d412e4484e00"
+        "time": "11:30",
+        "timezone": "PT",
+        "id": "078e3ff6-32fa-4c9f-960c-b45b41b7dfb9"
       },
-      "createdDateTime": "2025-08-21T13:39:53.065Z"
+      "createdDateTime": "2025-08-22T07:37:44.988Z"
     },
     {
-      "id": 10,
-      "engagementOwner": "sr4",
-      "speaker": "test4",
-      "caterer": "test4",
-      "cohost": "test4",
+      "id": 2,
+      "engagementOwner": "dinesh",
+      "speaker": "test2",
+      "caterer": "test2",
+      "cohost": "test2",
       "primaryDateTime": {
-        "date": "2025-08-21",
-        "time": "07:30",
+        "date": "2025-08-23",
+        "time": "22:30",
         "timezone": "CT",
-        "id": "08289c6a-a507-43d5-a7f4-ed23defc4884"
+        "id": "60dc53b0-95d3-4df9-bb8f-c80ac8e51b1d"
       },
       "secondaryDateTime": {
         "date": "2025-08-22",
-        "time": "07:45",
-        "timezone": "CT",
-        "id": "e1489e69-6ac4-46af-8f0e-a3b8f34e42c0"
+        "time": "06:45",
+        "timezone": "MT",
+        "id": "b5640af1-3b81-4f82-9997-56d3b0632359"
+      },
+      "tertiaryDateTime": "-",
+      "createdDateTime": "2025-08-22T07:38:48.865Z"
+    },
+    {
+      "id": 3,
+      "engagementOwner": "pk",
+      "speaker": "test3",
+      "caterer": "test3",
+      "cohost": "test3",
+      "primaryDateTime": {
+        "date": "2025-08-26",
+        "time": "07:30",
+        "timezone": "ET",
+        "id": "330035f2-c686-4a99-a1ed-b4a3631683d3"
+      },
+      "secondaryDateTime": {
+        "date": "2025-08-23",
+        "time": "10:00",
+        "timezone": "MT",
+        "id": "cfb8acb1-223d-454d-bd7d-334f2743d3d8"
       },
       "tertiaryDateTime": {
-        "date": "2025-08-22",
-        "time": "10:00",
-        "timezone": "CT",
-        "id": "9054d483-7c3e-474e-8c77-97fb6d15250b"
+        "date": "2025-08-29",
+        "time": "12:30",
+        "timezone": "MT",
+        "id": "6db25154-b4eb-4e1b-a039-581eca3e4823"
       },
-      "createdDateTime": "2025-08-21T13:56:44.205Z"
+      "createdDateTime": "2025-08-22T07:40:29.703Z"
+    },
+    {
+      "id": 4,
+      "engagementOwner": "pk",
+      "speaker": "test3",
+      "caterer": "test3",
+      "cohost": "test3",
+      "primaryDateTime": {
+        "date": "2025-08-22",
+        "time": "11:45",
+        "timezone": "ET",
+        "id": "0898cd37-ec4d-41ec-924a-9c6c2b0353f3"
+      },
+      "secondaryDateTime": {
+        "date": "2025-08-22",
+        "time": "14:30",
+        "timezone": "PT",
+        "id": "56db721d-7d5f-46de-b4fd-dbe885c8de9c"
+      },
+      "tertiaryDateTime": {
+        "date": "2025-08-24",
+        "time": "21:30",
+        "timezone": "GMT",
+        "id": "a83f0748-e08a-482a-8e14-40816849237b"
+      },
+      "createdDateTime": "2025-08-22T08:23:55.876Z"
     }
   ]
 }

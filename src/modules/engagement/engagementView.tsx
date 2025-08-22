@@ -66,7 +66,13 @@ export default function EngagementView() {
 
   function formatCreatedDateTime(dateTimeString: string) {
     const date = new Date(dateTimeString);
-    return date.toLocaleString();
+    return date.toLocaleString("en-US",{
+      day: "numeric",
+      month: "numeric",
+      year: "numeric",
+      hour: "numeric",
+      minute: "2-digit"
+    });
   }
 
   if (isLoading) {

@@ -25,7 +25,7 @@ export interface EngagementFormData {
   caterer: string;
   cohost: string;
   primaryDateTime: DateTimeSlot;
-  secondaryDateTime?: DateTimeSlot;
+  secondaryDateTime?: DateTimeSlot;                                 
   tertiaryDateTime?: DateTimeSlot;
 }
 
