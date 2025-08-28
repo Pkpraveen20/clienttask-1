@@ -1,24 +1,25 @@
 import { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
-import DateInput from "../../components/dataPicker";
+import DateInput from "../../../components/dataPicker";
 
-export default function RoleForm({ onClose }: { onClose: () => void }) {
+export default function ClientForm({ onClose }: { onClose: () => void }) {
   const [form, setForm] = useState({
-    rolename: "",
-    roletype: "",
-    rolestatus: "Active",
-    rolestartdate: "",
-    roleenddate: "",
-    roledescription: "",
+    name: "",
+    status: "Active",
+    startdate: "",
+    enddate: "",
+    address: "",
+    description: "",
   });
   const queryClient = useQueryClient();
 
-  const createrole = useMutation({
-    mutationFn: (newRole: typeof form) =>
-      axios.post("http://localhost:3000/roles", newRole),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["roles"] }),
+  const createClient = useMutation({
+    mutationFn: (newClient: typeof form) =>
+      axios.post("http://localhost:3000/clients", newClient),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["clients"] }),
   });
+
   function handleChange(
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) {
@@ -39,10 +40,10 @@ export default function RoleForm({ onClose }: { onClose: () => void }) {
     e.preventDefault();
     const formattedForm = {
       ...form,
-      rolestartdate: formatDateForDB(form.rolestartdate),
-      roleenddate: formatDateForDB(form.roleenddate),
+      startdate: formatDateForDB(form.startdate),
+      enddate: formatDateForDB(form.enddate),
     };
-    createrole.mutate(formattedForm);
+    createClient.mutate(formattedForm);
     onClose();
   }
 
@@ -54,60 +55,42 @@ export default function RoleForm({ onClose }: { onClose: () => void }) {
       <div className="space-y-4">
         <div>
           <label
-            htmlFor="rolename"
+            htmlFor="name"
             className="block mb-1 font-medium text-gray-700"
           >
-            Role Name
+            Client Name
           </label>
           <input
-            id="rolename"
-            name="rolename"
-            placeholder="Role Name"
-            value={form.rolename}
+            id="name"
+            name="name"
+            placeholder="Client Name"
+            value={form.name}
             onChange={handleChange}
             className="border border-gray-300 p-2 rounded w-full focus:ring-2 focus:ring-blue-200"
             required
           />
         </div>
-        <div>
-          <label
-            htmlFor="roletype"
-            className="block mb-1 font-medium text-gray-700"
-          >
-            Role Type
-          </label>
-          <input
-            id="roletype"
-            name="roletype"
-            placeholder="Role Type"
-            value={form.roletype}
-            onChange={handleChange}
-            className="border border-gray-300 p-2 rounded w-full focus:ring-2 focus:ring-blue-200"
-            required
-          />
-        </div>
+
         <div className="flex gap-4">
           <div className="flex-1">
             <DateInput
-              id="rolestartdate"
-              name="rolestartdate"
+              id="startdate"
+              name="startdate"
               label="Start Date"
-              value={form.rolestartdate}
+              value={form.startdate}
               onChange={(val) =>
-                setForm((prev) => ({ ...prev, rolestartdate: val }))
+                setForm((prev) => ({ ...prev, startdate: val }))
               }
               required
             />
           </div>
           <div className="flex-1">
             <DateInput
-              id="roleenddate"
-              name="roleenddate"
+              id="enddate"
+              name="enddate"
               label="End Date"
-              value={form.roleenddate}
-              onChange={(val) =>
-                setForm((prev) => ({ ...prev, roleenddate: val }))
-              }
+              value={form.enddate}
+              onChange={(val) => setForm((prev) => ({ ...prev, enddate: val }))}
               required
             />
           </div>
@@ -117,18 +100,36 @@ export default function RoleForm({ onClose }: { onClose: () => void }) {
             htmlFor="roledescription"
             className="block mb-1 font-medium text-gray-700"
           >
-            Role Description
+            Client Address
           </label>
           <textarea
-            id="roledescription"
-            name="roledescription"
-            placeholder="Role Description"
-            value={form.roledescription}
+            id="address"
+            name="address"
+            placeholder="Client Address"
+            value={form.address}
             onChange={handleChange}
             className="border border-gray-300 p-2 rounded w-full focus:ring-2 focus:ring-blue-200"
             required
           />
         </div>
+        <div>
+          <label
+            htmlFor="description"
+            className="block mb-1 font-medium text-gray-700"
+          >
+            Client Description
+          </label>
+          <textarea
+            id="description"
+            name="description"
+            placeholder="Client Description"
+            value={form.description}
+            onChange={handleChange}
+            className="border border-gray-300 p-2 rounded w-full focus:ring-2 focus:ring-blue-200"
+            required
+          />
+        </div>
+
         <div className="flex gap-2 justify-end pt-2">
           <button
             type="button"

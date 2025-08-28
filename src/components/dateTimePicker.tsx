@@ -6,7 +6,7 @@ import {
   DateTimeSlot,
   TIMEZONES,
   TIME_SLOTS,
-} from "../modules/engagement/engagementType";
+} from "../modules/enagementSetting/engagement/engagementType";
 import "react-datepicker/dist/react-datepicker.css";
 
 interface DateTimePickerProps {
@@ -46,7 +46,7 @@ export default function DateTimePicker({
     } else {
       if (selectedDate || selectedTime || selectedTimezone) {
         setSelectedDate(null);
-        setSelectedTime(""); 
+        setSelectedTime("");
         setSelectedTimezone("");
       }
     }
@@ -58,7 +58,7 @@ export default function DateTimePicker({
         date: DateTime.fromJSDate(selectedDate).toFormat("yyyy-MM-dd"),
         time: selectedTime,
         timezone: selectedTimezone,
-        id: undefined
+        id: undefined,
       };
 
       if (
@@ -93,69 +93,68 @@ export default function DateTimePicker({
     const displayHour = hour % 12 || 12;
     return `${displayHour}:${minutes} ${ampm}`;
   };
-  
+
   return (
-  <div className="space-y-3">
-    <label className="block text-sm font-medium text-gray-700">
-      {label} {required && <span className="text-red-500">*</span>}
-    </label>
+    <div className="space-y-3">
+      <label className="block text-sm font-medium text-gray-700">
+        {label} {required && <span className="text-red-500">*</span>}
+      </label>
 
-    <div className="flex flex-col md:flex-row gap-4">
-      <div className="flex-1">
-        <DatePicker
-          selected={selectedDate}
-          onChange={(date) => setSelectedDate(date)}
-          dateFormat="dd/MM/yyyy"
-          inline
-          calendarClassName="border border-gray-200 rounded-md p-1"
-          locale={enGB}
-          minDate={new Date()}
-        />
-      </div>
-
-      <div className="">
-        <div className="  mb-3">
-          <select
-            value={selectedTimezone}
-            onChange={(e) => setSelectedTimezone(e.target.value)}
-            className="w-full  px-3 py-2 border rounded-md"
-          >
-            <option value="">Select Timezone</option>
-            {TIMEZONES.map((tz) => (
-              <option key={tz.value} value={tz.value}>
-                {tz.label}
-              </option>
-            ))}
-          </select>
+      <div className="flex flex-col md:flex-row gap-4">
+        <div className="flex-1">
+          <DatePicker
+            selected={selectedDate}
+            onChange={(date) => setSelectedDate(date)}
+            dateFormat="dd/MM/yyyy"
+            inline
+            calendarClassName="border border-gray-200 rounded-md p-1"
+            locale={enGB}
+            minDate={new Date()}
+          />
         </div>
 
-        <div className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-5 gap-2">
-          {TIME_SLOTS.map((time) => {
-            const disabled = isTimeSlotDisabled(time);
-            const isSelected = selectedTime === time;
-            return (
-              <button
-                key={time}
-                type="button"
-                onClick={() => !disabled && setSelectedTime(time)}
-                disabled={disabled}
-                className={`px-3 py-2 rounded-md text-sm border ${
-                  disabled
-                    ? "bg-gray-100 text-gray-400 border-gray-200 cursor-not-allowed"
-                    : isSelected
-                    ? "bg-blue-600 text-white border-blue-600"
-                    : "bg-white text-gray-700 border-gray-300 hover:bg-blue-50"
-                }`}
-              >
-                {formatTimeForDisplay(time)}
-              </button>
-            );
-          })}
+        <div className="">
+          <div className="  mb-3">
+            <select
+              value={selectedTimezone}
+              onChange={(e) => setSelectedTimezone(e.target.value)}
+              className="w-full  px-3 py-2 border rounded-md"
+            >
+              <option value="">Select Timezone</option>
+              {TIMEZONES.map((tz) => (
+                <option key={tz.value} value={tz.value}>
+                  {tz.label}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-5 gap-2">
+            {TIME_SLOTS.map((time) => {
+              const disabled = isTimeSlotDisabled(time);
+              const isSelected = selectedTime === time;
+              return (
+                <button
+                  key={time}
+                  type="button"
+                  onClick={() => !disabled && setSelectedTime(time)}
+                  disabled={disabled}
+                  className={`px-3 py-2 rounded-md text-sm border ${
+                    // disable the component happen here
+                    disabled
+                      ? "bg-gray-100 text-gray-400 border-gray-200 cursor-not-allowed"
+                      : isSelected
+                      ? "bg-blue-600 text-white border-blue-600"
+                      : "bg-white text-gray-700 border-gray-300 hover:bg-blue-50"
+                  }`}
+                >
+                  {formatTimeForDisplay(time)}
+                </button>
+              );
+            })}
+          </div>
         </div>
       </div>
     </div>
-  </div>
-);
-
+  );
 }
-

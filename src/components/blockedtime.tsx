@@ -1,5 +1,5 @@
 import { DateTime } from "luxon";
-import { DateTimeSlot } from "../modules/engagement/engagementType";
+import { DateTimeSlot } from "../modules/enagementSetting/engagement/engagementType";
 
 const timezoneMap: Record<string, string> = {
   ET: "America/New_York",
@@ -8,7 +8,10 @@ const timezoneMap: Record<string, string> = {
   UTC: "UTC",
 };
 
-export default function IsBlocked(newSlot: DateTimeSlot, slots: DateTimeSlot[]): boolean {
+export default function IsBlocked(
+  newSlot: DateTimeSlot,
+  slots: DateTimeSlot[]
+): boolean {
   if (!newSlot.date || !newSlot.time || !newSlot.timezone) return false;
 
   const tz = timezoneMap[newSlot.timezone] || "UTC";

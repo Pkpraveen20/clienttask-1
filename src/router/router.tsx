@@ -4,12 +4,12 @@ import {
   createRouter,
 } from "@tanstack/react-router";
 import App from "../App";
-import ClientTable from "../modules/clients/clientTable";
-import RoleTable from "../modules/roles/roleTable";
-import FunctionalArea from "../modules/functionalAreas/functionalAreaTable";
-import PermissionTable from "../modules/permission/permissionTable";
-import EngagementTable from "../modules/engagement/engagementTable";
-import EngagementView from "../modules/engagement/engagementView";
+import ClientTable from "../modules/clientSetting/clients/clientTable";
+import RoleTable from "../modules/clientSetting/roles/roleTable";
+import EngagementTable from "../modules/enagementSetting/engagement/engagementTable";
+import EngagementView from "../modules/enagementSetting/engagement/engagementView";
+import FunctionalArea from "../modules/clientSetting/functionalAreas/functionalAreaTable";
+import PermissionTable from "../modules/clientSetting/permission/permissionTable";
 
 const rootRoute = createRootRoute({ component: App });
 

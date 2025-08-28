@@ -2,31 +2,28 @@ import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import Select, { MultiValue } from "react-select";
-import DateInput from "../../components/dataPicker";
+import DateInput from "../../../components/dataPicker";
 
 type ClientOption = { value: string; label: string };
+type RoleOption = { value: string; label: string };
 
-export default function FunctionalAreaForm({
-  onClose,
-}: {
-  onClose: () => void;
-}) {
+export default function PermissionForm({ onClose }: { onClose: () => void }) {
   const [form, setForm] = useState<{
-    functionalname: string;
-    functionaltype: string;
-    functionalstatus: string;
-    functionalstartdate: string;
-    functionalenddate: string;
-    functionaldescription: string;
-    functionalclient: MultiValue<ClientOption>;
+    permissionname: string;
+    permissionstatus: string;
+    permissionstartdate: string;
+    permissionenddate: string;
+    permissiondefinition: string;
+   permissionclient: MultiValue<ClientOption>;
+    permissionrole: MultiValue<RoleOption>;
   }>({
-    functionalname: "",
-    functionaltype: "",
-    functionalstatus: "Active",
-    functionalstartdate: "",
-    functionalenddate: "",
-    functionaldescription: "",
-    functionalclient: [],
+    permissionname: "",
+    permissionstatus: "Active",
+    permissionstartdate: "",
+    permissionenddate: "",
+    permissiondefinition: "",
+    permissionclient: [],
+    permissionrole: [],
   });
 
   const queryClient = useQueryClient();
@@ -37,11 +34,19 @@ export default function FunctionalAreaForm({
       axios.get("http://localhost:3000/clients").then((res) => res.data),
   });
 
-  const createFunctionalArea = useMutation({
-    mutationFn: (newFunctionalArea: any) =>
-      axios.post("http://localhost:3000/functionalarea", newFunctionalArea),
+  const { data: roles, error: rolesError } = useQuery({
+    queryKey: ["roles"],
+    queryFn: () =>
+      axios.get("http://localhost:3000/roles").then((res) => res.data),
+  });
+
+  if (rolesError) console.error("Roles fetch error:", rolesError);
+
+  const createPermission = useMutation({
+    mutationFn: (newPermission: any) =>
+      axios.post("http://localhost:3000/permission", newPermission),
     onSuccess: () =>
-      queryClient.invalidateQueries({ queryKey: ["functionalareas"] }),
+      queryClient.invalidateQueries({ queryKey: ["permissions"] }),
   });
 
   function handleChange(
@@ -67,14 +72,17 @@ export default function FunctionalAreaForm({
 
     const formattedForm = {
       ...form,
-      functionalstartdate: formatDateForDB(form.functionalstartdate),
-      functionalenddate: formatDateForDB(form.functionalenddate),
-      functionalclient: (form.functionalclient as MultiValue<ClientOption>).map(
+      permissionstartdate: formatDateForDB(form.permissionstartdate),
+      permissionenddate: formatDateForDB(form.permissionenddate),
+      permissionclient: (form.permissionclient as MultiValue<ClientOption>).map(
+        (c) => c.value
+      ),
+      permissionrole: (form.permissionrole as MultiValue<RoleOption>).map(
         (c) => c.value
       ),
     };
 
-    createFunctionalArea.mutate(formattedForm);
+    createPermission.mutate(formattedForm);
     onClose();
   }
 
@@ -86,6 +94,14 @@ export default function FunctionalAreaForm({
         label: client.name,
       })) || [];
 
+  const roleOptions =
+    roles
+      ?.filter((role: any) => role.rolestatus === "Active")
+      .map((role: any) => ({
+        value: role.rolename,
+        label: role.rolename,
+      })) || [];
+
   return (
     <form
       onSubmit={handleSubmit}
@@ -94,76 +110,63 @@ export default function FunctionalAreaForm({
       <div className="space-y-4">
         <div>
           <label
-            htmlFor="functionalname"
+            htmlFor="permissionname"
             className="block mb-1 font-medium text-gray-700"
           >
-            Functional Area Name
+            Permission Name
           </label>
           <input
-            id="functionalname"
-            name="functionalname"
+            id="permissionname"
+            name="permissionname"
             placeholder="Functional Area Name"
-            value={form.functionalname}
+            value={form.permissionname}
             onChange={handleChange}
             className="border border-gray-300 p-2 rounded w-full focus:ring-2 focus:ring-blue-200"
             required
           />
         </div>
-        <div>
-          <label
-            htmlFor="functionaltype"
-            className="block mb-1 font-medium text-gray-700"
-          >
-            Functional Area Type
-          </label>
-          <input
-            id="functionaltype"
-            name="functionaltype"
-            placeholder="Functional Area Type"
-            value={form.functionaltype}
-            onChange={handleChange}
-            className="border border-gray-300 p-2 rounded w-full focus:ring-2 focus:ring-blue-200"
-            required
-          />
-        </div>
+
         <div className="flex gap-4">
           <div className="flex-1">
+            
             <DateInput
-              id="functionalstartdate"
-              name="functionalstartdate"
+              id="permissionstartdate"
+              name="permissionstartdate"
               label="Start Date"
-              value={form.functionalstartdate}
+              value={form.permissionstartdate}
               onChange={(val) =>
-                setForm((prev) => ({ ...prev, functionalstartdate: val }))
+                setForm((prev) => ({ ...prev, permissionstartdate: val }))
               }
               required
             />
           </div>
           <div className="flex-1">
+           
             <DateInput
-              id="functionalenddate"
-              name="functionalenddate"
+              id="permissionenddate"
+              name="permissionenddate"
               label="End Date"
-              value={form.functionalenddate}
+              value={form.permissionenddate}
               onChange={(val) =>
-                setForm((prev) => ({ ...prev, functionalenddate: val }))
+                setForm((prev) => ({ ...prev, permissionenddate: val }))
               }
               required
             />
+            
           </div>
         </div>
         <div>
           <label
-            htmlFor="functionaldescription"
+            htmlFor="permissiondefinition"
             className="block mb-1 font-medium text-gray-700"
           >
             Definition
           </label>
           <textarea
-            id="functionaldescription"
-            name="functionaldescription"
+            id="permissiondefinition"
+            name="permissiondefinition"
             placeholder="Definition"
-            value={form.functionaldescription}
+            value={form.permissiondefinition}
             onChange={handleChange}
             className="border border-gray-300 p-2 rounded w-full focus:ring-2 focus:ring-blue-200"
             required
@@ -172,23 +175,45 @@ export default function FunctionalAreaForm({
 
         <div>
           <label
-            htmlFor="functionalclient"
+            htmlFor="permissionclient"
             className="block mb-1 font-medium text-gray-700"
           >
             Aligned Clients
           </label>
           <Select
             isMulti
-            name="functionalclient"
+            name="permissionclient"
             options={clientOptions}
-            value={form.functionalclient}
+            value={form.permissionclient}
             onChange={(selected) =>
               setForm((prev) => ({
                 ...prev,
-                functionalclient: selected,
+                permissionclient: selected,
               }))
             }
             placeholder="Select Clients"
+            className="text-sm"
+          />
+        </div>
+        <div>
+          <label
+            htmlFor="permissionrole"
+            className="block mb-1 font-medium text-gray-700"
+          >
+            Role
+          </label>
+          <Select
+            isMulti
+            name="permissionrole"
+            options={roleOptions}
+            value={form.permissionrole}
+            onChange={(selected) =>
+              setForm((prev) => ({
+                ...prev,
+                permissionrole: selected,
+              }))
+            }
+            placeholder={"Select role"}
             className="text-sm"
           />
         </div>

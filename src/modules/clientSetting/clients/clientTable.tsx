@@ -1,9 +1,8 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import { useState, useEffect } from "react";
-import ClientForm from "../clients/clientForm";
+import ClientForm from "./clientForm";
 import { Building } from "lucide-react";
-
 
 export default function ClientTable() {
   const [showForm, setShowForm] = useState(false);
@@ -11,7 +10,7 @@ export default function ClientTable() {
   const [sortKey, setSortKey] = useState("name");
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
   const queryClient = useQueryClient();
-  const [openMenuId, setOpenMenuId] = useState<number | null>(null); 
+  const [openMenuId, setOpenMenuId] = useState<number | null>(null);
 
   const { data, isLoading } = useQuery({
     queryKey: ["clients"],
@@ -97,9 +96,9 @@ export default function ClientTable() {
     <div>
       <div className="flex justify-between items-center mb-4">
         <h2 className="flex items-center gap-2 text-2xl font-bold">
-  <Building className="w-6 h-6" />
-  Clients - {clientsCount} {clientsCount !== 1 ? "" : ""}
-</h2>
+          <Building className="w-6 h-6" />
+          Clients - {clientsCount} {clientsCount !== 1 ? "" : ""}
+        </h2>
 
         <button
           onClick={() => setShowForm(true)}
@@ -118,29 +117,28 @@ export default function ClientTable() {
               d="M12 4v16m8-8H4"
             />
           </svg>
-
           Add Client
         </button>
       </div>
-     
+
       {showForm && (
-              <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
-                <div className="relative bg-white rounded-xl shadow-2xl w-full max-w-lg p-8 border border-gray-100 animate-fadeIn">
-                  <button
-                    onClick={() => setShowForm(false)}
-                    className="absolute top-4 right-4 text-gray-400 hover:text-red-500 text-2xl font-bold focus:outline-none"
-                    aria-label="Close"
-                  >
-                    &times;
-                  </button>
-                  <h2 className="text-2xl font-semibold mb-6 text-gray-800 flex items-center gap-2">
-                     <Building className="w-6 h-6" />
-                    Create New Client
-                  </h2>
-                  <ClientForm onClose={() => setShowForm(false)} />
-                </div>
-                <style>
-                  {`
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
+          <div className="relative bg-white rounded-xl shadow-2xl w-full max-w-lg p-8 border border-gray-100 animate-fadeIn">
+            <button
+              onClick={() => setShowForm(false)}
+              className="absolute top-4 right-4 text-gray-400 hover:text-red-500 text-2xl font-bold focus:outline-none"
+              aria-label="Close"
+            >
+              &times;
+            </button>
+            <h2 className="text-2xl font-semibold mb-6 text-gray-800 flex items-center gap-2">
+              <Building className="w-6 h-6" />
+              Create New Client
+            </h2>
+            <ClientForm onClose={() => setShowForm(false)} />
+          </div>
+          <style>
+            {`
               .animate-fadeIn {
                 animation: fadeIn 0.25s ease;
               }
@@ -149,10 +147,10 @@ export default function ClientTable() {
                 to { opacity: 1; transform: scale(1);}
               }
             `}
-                </style>
-              </div>
-            )}
-         <div className="mb-4">
+          </style>
+        </div>
+      )}
+      <div className="mb-4">
         <input
           type="text"
           placeholder="Search by name..."
@@ -237,7 +235,7 @@ export default function ClientTable() {
                 <td className="border px-4 py-2">{client.enddate}</td>
                 <td className="border px-4 py-2">{client.address}</td>
                 <td className="border px-4 py-2">{client.description}</td>
-               <td className="border px-4 py-2 relative">
+                <td className="border px-4 py-2 relative">
                   <button
                     onClick={() =>
                       setOpenMenuId(openMenuId === client.id ? null : client.id)
