@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { Building, Folder, ShieldCheck, User, Calendar } from "lucide-react";
+import { Building, Folder, ShieldCheck, User, Calendar, Check } from "lucide-react";
 
 export default function Sidebar() {
   return (
@@ -37,6 +37,13 @@ export default function Sidebar() {
         >
           <Calendar className="w-5 h-5" />
           Engagements
+        </Link>
+        <Link
+          to="/product"
+          className="flex items-center gap-2 [&.active]:font-bold"
+        >
+          <Check className="w-5 h-5" />
+          Product
         </Link>
       </nav>
     </aside>
