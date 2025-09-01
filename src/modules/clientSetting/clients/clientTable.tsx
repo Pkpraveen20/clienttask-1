@@ -162,104 +162,162 @@ export default function ClientTable() {
       {isLoading ? (
         <p>Loading...</p>
       ) : (
-        <table className="w-full table-auto border">
-          <thead>
-            <tr className="bg-gray-100">
-              <th
-                className="border px-4 py-2 cursor-pointer"
-                onClick={() => {
-                  setSortKey("name");
-                  setSortOrder(
-                    sortKey === "name" && sortOrder === "asc" ? "desc" : "asc"
-                  );
-                }}
-              >
-                Client Name{" "}
-                {sortKey === "name" ? (sortOrder === "asc" ? "▲" : "▼") : ""}
-              </th>
-              <th
-                className="border px-4 py-2 cursor-pointer"
-                onClick={() => {
-                  setSortKey("status");
-                  setSortOrder(
-                    sortKey === "status" && sortOrder === "asc" ? "desc" : "asc"
-                  );
-                }}
-              >
-                Status{" "}
-                {sortKey === "status" ? (sortOrder === "asc" ? "▲" : "▼") : ""}
-              </th>
-              <th
-                className="border px-4 py-2 cursor-pointer"
-                onClick={() => {
-                  setSortKey("startdate");
-                  setSortOrder(
-                    sortKey === "startdate" && sortOrder === "asc"
-                      ? "desc"
-                      : "asc"
-                  );
-                }}
-              >
-                Start Date{" "}
-                {sortKey === "startdate"
-                  ? sortOrder === "asc"
-                    ? "▲"
-                    : "▼"
-                  : ""}
-              </th>
-              <th
-                className="border px-4 py-2 cursor-pointer"
-                onClick={() => {
-                  setSortKey("enddate");
-                  setSortOrder(
-                    sortKey === "enddate" && sortOrder === "asc"
-                      ? "desc"
-                      : "asc"
-                  );
-                }}
-              >
-                End Date{" "}
-                {sortKey === "enddate" ? (sortOrder === "asc" ? "▲" : "▼") : ""}
-              </th>
-              <th className="border px-4 py-2">Address</th>
-              <th className="border px-4 py-2">Description</th>
-              <th className="border px-4 py-2"></th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredClients.map((client: any) => (
-              <tr key={client.id}>
-                <td className="border px-4 py-2">{client.name}</td>
-                <td className="border px-4 py-2">{getStatus(client)}</td>
-                <td className="border px-4 py-2">{client.startdate}</td>
-                <td className="border px-4 py-2">{client.enddate}</td>
-                <td className="border px-4 py-2">{client.address}</td>
-                <td className="border px-4 py-2">{client.description}</td>
-                <td className="border px-4 py-2 relative">
-                  <button
-                    onClick={() =>
-                      setOpenMenuId(openMenuId === client.id ? null : client.id)
-                    }
-                    className="px-2 py-1 rounded hover:bg-gray-200"
-                  >
-                    ⋮
-                  </button>
-
-                  {openMenuId === client.id && (
-                    <div className="absolute right-0 mt-1 w-28 bg-white border rounded shadow-md z-10">
-                      <button
-                        onClick={() => handleDelete(client.id)}
-                        className="block w-full text-left px-4 py-2 text-red-600 hover:bg-red-50"
-                      >
-                        Delete
-                      </button>
-                    </div>
-                  )}
-                </td>
+        <div className="bg-white rounded-lg shadow overflow-y-auto">
+          <table className="w-full">
+            <thead className="bg-gray-50 border-b border-gray-200">
+              <tr className="bg-gray-100">
+                <th
+                  className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
+                  onClick={() => {
+                    setSortKey("id");
+                    setSortOrder(
+                      sortKey === "id" && sortOrder === "asc" ? "desc" : "asc"
+                    );
+                  }}
+                >
+                  <div className="flex items-center gap-1">
+                    Client ID
+                    {sortKey === "id" && (
+                      <span className="text-blue-600">
+                        {sortOrder === "asc" ? "▲" : "▼"}
+                      </span>
+                    )}
+                  </div>
+                </th>
+                <th
+                  className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
+                  onClick={() => {
+                    setSortKey("name");
+                    setSortOrder(
+                      sortKey === "name" && sortOrder === "asc" ? "desc" : "asc"
+                    );
+                  }}
+                >
+                  Client Name{" "}
+                  {sortKey === "name" ? (sortOrder === "asc" ? "▲" : "▼") : ""}
+                </th>
+                <th
+                  className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
+                  onClick={() => {
+                    setSortKey("status");
+                    setSortOrder(
+                      sortKey === "status" && sortOrder === "asc"
+                        ? "desc"
+                        : "asc"
+                    );
+                  }}
+                >
+                  Status{" "}
+                  {sortKey === "status"
+                    ? sortOrder === "asc"
+                      ? "▲"
+                      : "▼"
+                    : ""}
+                </th>
+                <th
+                  className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
+                  onClick={() => {
+                    setSortKey("startdate");
+                    setSortOrder(
+                      sortKey === "startdate" && sortOrder === "asc"
+                        ? "desc"
+                        : "asc"
+                    );
+                  }}
+                >
+                  Start Date{" "}
+                  {sortKey === "startdate"
+                    ? sortOrder === "asc"
+                      ? "▲"
+                      : "▼"
+                    : ""}
+                </th>
+                <th
+                  className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
+                  onClick={() => {
+                    setSortKey("enddate");
+                    setSortOrder(
+                      sortKey === "enddate" && sortOrder === "asc"
+                        ? "desc"
+                        : "asc"
+                    );
+                  }}
+                >
+                  End Date{" "}
+                  {sortKey === "enddate"
+                    ? sortOrder === "asc"
+                      ? "▲"
+                      : "▼"
+                    : ""}
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100">
+                  Address
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100">
+                  Description
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"></th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody className="bg-white divide-y divide-gray-200">
+              {filteredClients.map((client: any) => (
+                <tr key={client.id}>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    {client.id}
+                  </td>{" "}
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    {client.name}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    {getStatus(client)}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    {client.startdate}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    {client.enddate}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    {client.address}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    {client.description}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    <button
+                      onClick={() =>
+                        setOpenMenuId(
+                          openMenuId === client.id ? null : client.id
+                        )
+                      }
+                      className="text-gray-400 hover:text-gray-600 px-2 py-1 rounded hover:bg-gray-100"
+                    >
+                      ⋮
+                    </button>
+
+                    {openMenuId === client.id && (
+                      <div className="absolute right-0 mt-1 w-28 bg-white border rounded shadow-md z-10">
+                        <button
+                          onClick={() => handleDelete(client.id)}
+                          className="block w-full text-left px-4 py-2 text-red-600 hover:bg-red-50"
+                        >
+                          Delete
+                        </button>
+                      </div>
+                    )}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          {filteredClients.length === 0 && (
+            <div className="text-center py-8 text-gray-500">
+              {search
+                ? "No Client found matching your search."
+                : "No Client found."}
+            </div>
+          )}
+        </div>
       )}
     </div>
   );

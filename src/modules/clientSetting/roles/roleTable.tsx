@@ -160,139 +160,180 @@ export default function RoleTable() {
       {isLoading ? (
         <p>Loading...</p>
       ) : (
-        <table className="w-full table-auto border">
-          <thead>
-            <tr className="bg-gray-100">
-              <th
-                className="border px-4 py-2 cursor-pointer"
-                onClick={() => {
-                  setSortKey("rolename");
-                  setSortOrder(
-                    sortKey === "rolename" && sortOrder === "asc"
-                      ? "desc"
-                      : "asc"
-                  );
-                }}
-              >
-                Role Name{" "}
-                {sortKey === "rolename"
-                  ? sortOrder === "asc"
-                    ? "▲"
-                    : "▼"
-                  : ""}
-              </th>
-              <th
-                className="border px-4 py-2 cursor-pointer"
-                onClick={() => {
-                  setSortKey("rolestatus");
-                  setSortOrder(
-                    sortKey === "rolestatus" && sortOrder === "asc"
-                      ? "desc"
-                      : "asc"
-                  );
-                }}
-              >
-                Role Status{" "}
-                {sortKey === "rolestatus"
-                  ? sortOrder === "asc"
-                    ? "▲"
-                    : "▼"
-                  : ""}
-              </th>
-              <th
-                className="border px-4 py-2 cursor-pointer"
-                onClick={() => {
-                  setSortKey("roletype");
-                  setSortOrder(
-                    sortKey === "roletype" && sortOrder === "asc"
-                      ? "desc"
-                      : "asc"
-                  );
-                }}
-              >
-                Role Type{" "}
-                {sortKey === "roletype"
-                  ? sortOrder === "asc"
-                    ? "▲"
-                    : "▼"
-                  : ""}
-              </th>
+        <div className="bg-white rounded-lg shadow overflow-y-auto">
+          <table className="w-full">
+            <thead className="bg-gray-50 border-b border-gray-200">
+              <tr className="bg-gray-100">
+                <th
+                  className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
+                  onClick={() => {
+                    setSortKey("id");
+                    setSortOrder(
+                      sortKey === "id" && sortOrder === "asc" ? "desc" : "asc"
+                    );
+                  }}
+                >
+                  <div className="flex items-center gap-1">
+                    Role ID
+                    {sortKey === "id" && (
+                      <span className="text-blue-600">
+                        {sortOrder === "asc" ? "▲" : "▼"}
+                      </span>
+                    )}
+                  </div>
+                </th>
+                <th
+                  className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
+                  onClick={() => {
+                    setSortKey("rolename");
+                    setSortOrder(
+                      sortKey === "rolename" && sortOrder === "asc"
+                        ? "desc"
+                        : "asc"
+                    );
+                  }}
+                >
+                  Role Name{" "}
+                  {sortKey === "rolename"
+                    ? sortOrder === "asc"
+                      ? "▲"
+                      : "▼"
+                    : ""}
+                </th>
+                <th
+                  className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
+                  onClick={() => {
+                    setSortKey("rolestatus");
+                    setSortOrder(
+                      sortKey === "rolestatus" && sortOrder === "asc"
+                        ? "desc"
+                        : "asc"
+                    );
+                  }}
+                >
+                  Role Status{" "}
+                  {sortKey === "rolestatus"
+                    ? sortOrder === "asc"
+                      ? "▲"
+                      : "▼"
+                    : ""}
+                </th>
+                <th
+                  className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
+                  onClick={() => {
+                    setSortKey("roletype");
+                    setSortOrder(
+                      sortKey === "roletype" && sortOrder === "asc"
+                        ? "desc"
+                        : "asc"
+                    );
+                  }}
+                >
+                  Role Type{" "}
+                  {sortKey === "roletype"
+                    ? sortOrder === "asc"
+                      ? "▲"
+                      : "▼"
+                    : ""}
+                </th>
 
-              <th
-                className="border px-4 py-2 cursor-pointer"
-                onClick={() => {
-                  setSortKey("rolestartdate");
-                  setSortOrder(
-                    sortKey === "rolestartdate" && sortOrder === "asc"
-                      ? "desc"
-                      : "asc"
-                  );
-                }}
-              >
-                Start Date{" "}
-                {sortKey === "rolestartdate"
-                  ? sortOrder === "asc"
-                    ? "▲"
-                    : "▼"
-                  : ""}
-              </th>
-              <th
-                className="border px-4 py-2 cursor-pointer"
-                onClick={() => {
-                  setSortKey("roleenddate");
-                  setSortOrder(
-                    sortKey === "roleenddate" && sortOrder === "asc"
-                      ? "desc"
-                      : "asc"
-                  );
-                }}
-              >
-                End Date{" "}
-                {sortKey === "roleenddate"
-                  ? sortOrder === "asc"
-                    ? "▲"
-                    : "▼"
-                  : ""}
-              </th>
-              <th className="border px-4 py-2">Description</th>
-              <th className="border px-4 py-2"></th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredRole.map((role: any) => (
-              <tr key={role.id}>
-                <td className="border px-4 py-2">{role.rolename}</td>
-                <td className="border px-4 py-2">{getStatus(role)}</td>
-                <td className="border px-4 py-2">{role.roletype}</td>
-
-                <td className="border px-4 py-2">{role.rolestartdate}</td>
-                <td className="border px-4 py-2">{role.roleenddate}</td>
-                <td className="border px-4 py-2">{role.roledescription}</td>
-                <td className="border px-4 py-2 relative">
-                  <button
-                    onClick={() =>
-                      setOpenMenuId(openMenuId === role.id ? null : role.id)
-                    }
-                    className="px-2 py-1 rounded  hover:bg-gray-200 "
-                  >
-                    ⋮
-                  </button>
-
-                  {openMenuId === role.id && (
-                    <div className="absolute right-0 mt-1 w-28 bg-white border rounded shadow-md z-10">
-                      <button
-                        onClick={() => handleDelete(role.id)}
-                        className="block w-full text-left px-4 py-2 text-red-600 hover:bg-red-50"
-                      >
-                        Delete
-                      </button>
-                    </div>
-                  )}
-                </td>
+                <th
+                  className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
+                  onClick={() => {
+                    setSortKey("rolestartdate");
+                    setSortOrder(
+                      sortKey === "rolestartdate" && sortOrder === "asc"
+                        ? "desc"
+                        : "asc"
+                    );
+                  }}
+                >
+                  Start Date{" "}
+                  {sortKey === "rolestartdate"
+                    ? sortOrder === "asc"
+                      ? "▲"
+                      : "▼"
+                    : ""}
+                </th>
+                <th
+                  className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
+                  onClick={() => {
+                    setSortKey("roleenddate");
+                    setSortOrder(
+                      sortKey === "roleenddate" && sortOrder === "asc"
+                        ? "desc"
+                        : "asc"
+                    );
+                  }}
+                >
+                  End Date{" "}
+                  {sortKey === "roleenddate"
+                    ? sortOrder === "asc"
+                      ? "▲"
+                      : "▼"
+                    : ""}
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100">
+                  Description
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"></th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody className="bg-white divide-y divide-gray-200">
+              {filteredRole.map((role: any) => (
+                <tr key={role.id}>
+                  <td className="px-6 py-4 whitespace-nowrap">{role.id}</td>{" "}
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    {role.rolename}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    {getStatus(role)}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    {role.roletype}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    {role.rolestartdate}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    {role.roleenddate}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    {role.roledescription}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium relative">
+                    <button
+                      onClick={() =>
+                        setOpenMenuId(openMenuId === role.id ? null : role.id)
+                      }
+                      className="text-gray-400 hover:text-gray-600 px-2 py-1 rounded hover:bg-gray-100"
+                    >
+                      ⋮
+                    </button>
+
+                    {openMenuId === role.id && (
+                      <div className="absolute right-0 mt-1 w-28 bg-white border rounded shadow-md z-10">
+                        <button
+                          onClick={() => handleDelete(role.id)}
+                          className="block w-full text-left px-4 py-2 text-red-600 hover:bg-red-50"
+                        >
+                          Delete
+                        </button>
+                      </div>
+                    )}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          {filteredRole.length === 0 && (
+            <div className="text-center py-8 text-gray-500">
+              {search
+                ? "No Role found matching your search."
+                : "No Roles found."}
+            </div>
+          )}
+        </div>
       )}
     </div>
   );

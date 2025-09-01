@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import DateInput from "../../../components/dataPicker";
@@ -13,12 +13,31 @@ export default function RoleForm({ onClose }: { onClose: () => void }) {
     roledescription: "",
   });
   const queryClient = useQueryClient();
+  const [nextId, setNextId] = useState<number>(1);
+
+  useEffect(() => {
+    axios.get("http://localhost:3000/roles").then((res) => {
+      const all = res.data as any[];
+      const numericIds = (Array.isArray(all) ? all : [])
+        .map((e) => Number(e?.id))
+        .filter((n) => Number.isFinite(n)) as number[];
+      setNextId((numericIds.length ? Math.max(...numericIds) : 0) + 1);
+    });
+  }, []);
 
   const createrole = useMutation({
-    mutationFn: (newRole: typeof form) =>
-      axios.post("http://localhost:3000/roles", newRole),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["roles"] }),
+    mutationFn: async (newRole: typeof form) => {
+      return axios.post("http://localhost:3000/roles", {
+        id: nextId,
+        ...newRole,
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["roles"] });
+      onClose();
+    },
   });
+
   function handleChange(
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) {

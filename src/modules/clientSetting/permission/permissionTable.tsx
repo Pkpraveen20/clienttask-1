@@ -13,15 +13,15 @@ export default function PermissionTable() {
   const [openMenuId, setOpenMenuId] = useState<number | null>(null);
 
   const { data, isLoading } = useQuery({
-    queryKey: ["permissions"],
+    queryKey: ["permission"],
     queryFn: () =>
       axios.get("http://localhost:3000/permission").then((res) => res.data),
   });
   const deleteMutation = useMutation({
-    mutationFn: (id: number) =>
+    mutationFn: (id: number | string) =>
       axios.delete(`http://localhost:3000/permission/${id}`),
     onSuccess: () =>
-      queryClient.invalidateQueries({ queryKey: ["permissions"] }),
+      queryClient.invalidateQueries({ queryKey: ["permission"] }),
   });
 
   const updateStatusMutation = useMutation({
@@ -31,15 +31,15 @@ export default function PermissionTable() {
     }: {
       id: number;
       permissionstatus: string;
-    }) =>                                                             
+    }) =>
       axios.patch(`http://localhost:3000/permission/${id}`, {
         permissionstatus,
       }),
     onSuccess: () =>
-      queryClient.invalidateQueries({ queryKey: ["permissions"] }),
+      queryClient.invalidateQueries({ queryKey: ["permission"] }),
   });
 
-  function handleDelete(id: number) {
+  const handleDelete=(id: number) => {
     if (confirm("Are you sure you want to delete this client?")) {
       deleteMutation.mutate(id);
     }
@@ -52,7 +52,7 @@ export default function PermissionTable() {
 
   function getStatus(role: any) {
     const today = new Date();
-    today.setHours(0, 0, 0, 0);      
+    today.setHours(0, 0, 0, 0);
 
     const permissionenddate = parseDate(role.permissionenddate);
     permissionenddate.setHours(0, 0, 0, 0);
@@ -102,7 +102,7 @@ export default function PermissionTable() {
     }
   }, [data]);
 
-  const filteredPermissions = getFilteredSortedpermission(data || []);        
+  const filteredPermissions = getFilteredSortedpermission(data || []);
   const permissionCount = filteredPermissions.length;
 
   return (
@@ -176,162 +176,197 @@ export default function PermissionTable() {
       {isLoading ? (
         <p>Loading...</p>
       ) : (
-        <table className="w-full table-auto border">
-          <thead>
-            <tr className="bg-gray-100">
-              <th
-                className="border px-4 py-2 cursor-pointer"
-                onClick={() => {
-                  setSortKey("permissionname");
-                  setSortOrder(
-                    sortKey === "permissionname" && sortOrder === "asc"
-                      ? "desc"
-                      : "asc"
-                  );
-                }}
-              >
-                Permission Name{" "}
-                {sortKey === "permissionname"
-                  ? sortOrder === "asc"
-                    ? "▲"
-                    : "▼"
-                  : ""}
-              </th>
+        <div className="bg-white rounded-lg shadow overflow-y-auto">
+          <table className="w-full">
+            <thead className="bg-gray-50 border-b border-gray-200">
+              <tr className="bg-gray-100">
+                <th
+                  className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
+                  onClick={() => {
+                    setSortKey("id");
+                    setSortOrder(
+                      sortKey === "id" && sortOrder === "asc" ? "desc" : "asc"
+                    );
+                  }}
+                >
+                  <div className="flex items-center gap-1">
+                    Permission ID
+                    {sortKey === "id" && (
+                      <span className="text-blue-600">
+                        {sortOrder === "asc" ? "▲" : "▼"}
+                      </span>
+                    )}
+                  </div>
+                </th>
+                <th
+                  className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
+                  onClick={() => {
+                    setSortKey("permissionname");
+                    setSortOrder(
+                      sortKey === "permissionname" && sortOrder === "asc"
+                        ? "desc"
+                        : "asc"
+                    );
+                  }}
+                >
+                  Permission Name{" "}
+                  {sortKey === "permissionname"
+                    ? sortOrder === "asc"
+                      ? "▲"
+                      : "▼"
+                    : ""}
+                </th>
 
-              <th
-                className="border px-4 py-2 cursor-pointer"
-                onClick={() => {
-                  setSortKey("permissionstatus");
-                  setSortOrder(
-                    sortKey === "permissionstatus" && sortOrder === "asc"
-                      ? "desc"
-                      : "asc"
-                  );
-                }}
-              >
-                Status{" "}
-                {sortKey === "permissionstatus"
-                  ? sortOrder === "asc"
-                    ? "▲"
-                    : "▼"
-                  : ""}
-              </th>
+                <th
+                  className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
+                  onClick={() => {
+                    setSortKey("permissionstatus");
+                    setSortOrder(
+                      sortKey === "permissionstatus" && sortOrder === "asc"
+                        ? "desc"
+                        : "asc"
+                    );
+                  }}
+                >
+                  Status{" "}
+                  {sortKey === "permissionstatus"
+                    ? sortOrder === "asc"
+                      ? "▲"
+                      : "▼"
+                    : ""}
+                </th>
 
-              <th
-                className="border px-4 py-2 cursor-pointer"
-                onClick={() => {
-                  setSortKey("permissionstartdate");
-                  setSortOrder(
-                    sortKey === "permissionstartdate" && sortOrder === "asc"
-                      ? "desc"
-                      : "asc"
-                  );
-                }}
-              >
-                Start Date{" "}
-                {sortKey === "permissionstartdate"
-                  ? sortOrder === "asc"
-                    ? "▲"
-                    : "▼"
-                  : ""}
-              </th>
-              <th
-                className="border px-4 py-2 cursor-pointer"
-                onClick={() => {
-                  setSortKey("permissionenddate");
-                  setSortOrder(
-                    sortKey === "permissionenddate" && sortOrder === "asc"
-                      ? "desc"
-                      : "asc"
-                  );
-                }}
-              >
-                End Date{" "}
-                {sortKey === "permissionenddate"
-                  ? sortOrder === "asc"
-                    ? "▲"
-                    : "▼"
-                  : ""}
-              </th>
-              <th className="border px-4 py-2">Definition</th>
-              <th className="border px-4 py-2">Aligned Client</th>
-              <th className="border px-4 py-2">Role</th>
+                <th
+                  className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
+                  onClick={() => {
+                    setSortKey("permissionstartdate");
+                    setSortOrder(
+                      sortKey === "permissionstartdate" && sortOrder === "asc"
+                        ? "desc"
+                        : "asc"
+                    );
+                  }}
+                >
+                  Start Date{" "}
+                  {sortKey === "permissionstartdate"
+                    ? sortOrder === "asc"
+                      ? "▲"
+                      : "▼"
+                    : ""}
+                </th>
+                <th
+                  className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
+                  onClick={() => {
+                    setSortKey("permissionenddate");
+                    setSortOrder(
+                      sortKey === "permissionenddate" && sortOrder === "asc"
+                        ? "desc"
+                        : "asc"
+                    );
+                  }}
+                >
+                  End Date{" "}
+                  {sortKey === "permissionenddate"
+                    ? sortOrder === "asc"
+                      ? "▲"
+                      : "▼"
+                    : ""}
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100">
+                  Definition
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100">
+                  Aligned Client
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100">
+                  Role
+                </th>
 
-              <th className="border px-4 py-2"></th>
-            </tr> 
-          </thead>
-          <tbody>
-          {filteredPermissions.map((permission: any) => (
-              <tr key={permission.id}>
-                <td className="border px-4 py-2">
-                  {permission.permissionname}
-                </td>
-
-                <td className="border px-4 py-2">{getStatus(permission)}</td>
-                <td className="border px-4 py-2">
-                  {permission.permissionstartdate}
-                </td>
-                <td className="border px-4 py-2"> 
-                  {permission.permissionenddate}
-                </td>
-                <td className="border px-4 py-2">       
-                  {permission.permissiondefinition}
-                </td>
-                <td className="border px-4 py-2">
-                  {Array.isArray(permission.permissionclient)
-                    ? permission.permissionclient
-                        .map((c: any) => {
-                          if (typeof c === "object" && c !== null) {
-                            return c.label || c.value || String(c);
-                          }
-                          return String(c);
-                        })
-                        .filter(Boolean)         
-                        .join(", ")
-                    : String(permission.permissionclient || "")}
-                </td>
-
-                <td className="border px-4 py-2">
-                  {Array.isArray(permission.permissionrole)
-                    ? permission.permissionrole
-                        .map((r: any) => {
-                          if (typeof r === "object" && r !== null) {
-                            return r.label || r.value || String(r);
-                          }
-                          return String(r);
-                        })
-                        .filter(Boolean)
-                        .join(", ")
-                    : String(permission.permissionrole || "")}
-                </td>
-
-                <td className="border px-4 py-2 relative">
-                  <button
-                    onClick={() =>
-                      setOpenMenuId(
-                        openMenuId === permission.id ? null : permission.id      
-                      )
-                    }
-                    className="px-2 py-1 rounded hover:bg-gray-200"
-                  >
-                    ⋮
-                  </button>
-
-                  {openMenuId === permission.id && (
-                    <div className="absolute right-0 mt-1 w-28 bg-white border rounded shadow-md z-10">
-                      <button
-                        onClick={() => handleDelete(permission.id)}
-                        className="block w-full text-left px-4 py-2 text-red-600 hover:bg-red-50"
-                      >
-                        Delete
-                      </button>
-                    </div>
-                  )}
-                </td>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"></th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody className="bg-white divide-y divide-gray-200">
+              {filteredPermissions.map((permission: any) => (
+                <tr key={permission.id}>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    {permission.id}
+                  </td>{" "}
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    {permission.permissionname}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    {getStatus(permission)}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    {permission.permissionstartdate}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    {permission.permissionenddate}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    {permission.permissiondefinition}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    {Array.isArray(permission.permissionclient)
+                      ? permission.permissionclient
+                          .map((c: any) => {
+                            if (typeof c === "object" && c !== null) {
+                              return c.label || c.value || String(c);
+                            }
+                            return String(c);
+                          })
+                          .filter(Boolean)
+                          .join(", ")
+                      : String(permission.permissionclient || "")}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    {Array.isArray(permission.permissionrole)
+                      ? permission.permissionrole
+                          .map((r: any) => {
+                            if (typeof r === "object" && r !== null) {
+                              return r.label || r.value || String(r);
+                            }
+                            return String(r);
+                          })
+                          .filter(Boolean)
+                          .join(", ")
+                      : String(permission.permissionrole || "")}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium relative">
+                    <button
+                      onClick={() =>
+                        setOpenMenuId(
+                          openMenuId === permission.id ? null : permission.id
+                        )
+                      }
+                      className="text-gray-400 hover:text-gray-600 px-2 py-1 rounded hover:bg-gray-100"
+                    >
+                      ⋮
+                    </button>
+
+                    {openMenuId === permission.id && (
+                      <div className="absolute right-0 mt-1 w-28 bg-white border rounded shadow-md z-10">
+                        <button
+                          onClick={() => handleDelete(Number(permission.id))}
+                          className="block w-full text-left px-4 py-2 text-red-600 hover:bg-red-50"
+                        >
+                          Delete
+                        </button>
+                      </div>
+                    )}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          {filteredPermissions.length === 0 && (
+            <div className="text-center py-8 text-gray-500">
+              {search
+                ? "No Permissions found matching your search."
+                : "No Permissions found."}
+            </div>
+          )}
+        </div>
       )}
     </div>
   );

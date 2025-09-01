@@ -11,6 +11,8 @@ import EngagementView from "../modules/enagementSetting/engagement/engagementVie
 import FunctionalArea from "../modules/clientSetting/functionalAreas/functionalAreaTable";
 import PermissionTable from "../modules/clientSetting/permission/permissionTable";
 import ProductTable from "../modules/global/productModule/productTable";
+import TopicTable from "../modules/global/topicModule/topicTable";
+import ContentTable from "../modules/global/contentModule/contentTable";
 
 const rootRoute = createRootRoute({ component: App });
 
@@ -46,10 +48,20 @@ const engagementViewRoute = createRoute({
   path: "/engagements/$id",
   component: EngagementView,
 });
-const productViewRoute = createRoute({
+const productRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: "/product",
   component: ProductTable,
+});
+const topicRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/topic",
+  component: TopicTable,
+});
+const contentRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/content",
+  component: ContentTable,
 });
 
 
@@ -60,7 +72,9 @@ const routeTree = rootRoute.addChildren([
   permissionRoute,
   engagementRoute,
   engagementViewRoute,
-  productViewRoute,
+  productRoute,
+  topicRoute,
+  contentRoute,
 ]);
 
 export const router = createRouter({ routeTree });

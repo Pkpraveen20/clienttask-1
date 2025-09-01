@@ -12,8 +12,8 @@ export default function FunctionalArea() {
   const queryClient = useQueryClient();
   const [openMenuId, setOpenMenuId] = useState<number | null>(null);
 
-  const { data, isLoading } = useQuery({
-    queryKey: ["functionalareas"],
+  const { data, isLoading, refetch } = useQuery({
+    queryKey: ["functionalarea"],
     queryFn: () =>
       axios.get("http://localhost:3000/functionalarea").then((res) => res.data),
   });
@@ -22,7 +22,7 @@ export default function FunctionalArea() {
     mutationFn: (id: number) =>
       axios.delete(`http://localhost:3000/functionalarea/${id}`),
     onSuccess: () =>
-      queryClient.invalidateQueries({ queryKey: ["functionalareas"] }),
+      queryClient.invalidateQueries({ queryKey: ["functionalarea"] }),
   });
 
   const updateStatusMutation = useMutation({
@@ -37,13 +37,14 @@ export default function FunctionalArea() {
         functionalstatus,
       }),
     onSuccess: () =>
-      queryClient.invalidateQueries({ queryKey: ["functionalareas"] }),
+      queryClient.invalidateQueries({ queryKey: ["functionalarea"] }),
   });
 
   function handleDelete(id: number) {
-    if (confirm("Are you sure you want to delete this client?")) {
+    if (confirm("Are you sure you want to delete this Functional Area?")) {
       deleteMutation.mutate(id);
     }
+    refetch();
   }
 
   function parseDate(ddmmyyyy: string): Date {
@@ -176,161 +177,195 @@ export default function FunctionalArea() {
       {isLoading ? (
         <p>Loading...</p>
       ) : (
-        <table className="w-full table-auto border">
-          <thead>
-            <tr className="bg-gray-100">
-              <th
-                className="border px-4 py-2 cursor-pointer"
-                onClick={() => {
-                  setSortKey("functionalname");
-                  setSortOrder(
-                    sortKey === "functionalname" && sortOrder === "asc"
-                      ? "desc"
-                      : "asc"
-                  );
-                }}
-              >
-                Functional Area Name{" "}
-                {sortKey === "rolename"
-                  ? sortOrder === "asc"
-                    ? "▲"
-                    : "▼"
-                  : ""}
-              </th>
+        <div className="bg-white rounded-lg shadow overflow-y-auto">
+          <table className="w-full">
+            <thead className="bg-gray-50 border-b border-gray-200">
+              <tr className="bg-gray-100">
+                <th
+                  className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
+                  onClick={() => {
+                    setSortKey("id");
+                    setSortOrder(
+                      sortKey === "id" && sortOrder === "asc" ? "desc" : "asc"
+                    );
+                  }}
+                >
+                  <div className="flex items-center gap-1">
+                    Functional ID
+                    {sortKey === "id" && (
+                      <span className="text-blue-600">
+                        {sortOrder === "asc" ? "▲" : "▼"}
+                      </span>
+                    )}
+                  </div>
+                </th>
+                <th
+                  className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
+                  onClick={() => {
+                    setSortKey("functionalname");
+                    setSortOrder(
+                      sortKey === "functionalname" && sortOrder === "asc"
+                        ? "desc"
+                        : "asc"
+                    );
+                  }}
+                >
+                  Functional Area Name{" "}
+                  {sortKey === "rolename"
+                    ? sortOrder === "asc"
+                      ? "▲"
+                      : "▼"
+                    : ""}
+                </th>
 
-              <th
-                className="border px-4 py-2 cursor-pointer"
-                onClick={() => {
-                  setSortKey("functionaltype");
-                  setSortOrder(
-                    sortKey === "functionaltype" && sortOrder === "asc"
-                      ? "desc"
-                      : "asc"
-                  );
-                }}
-              >
-                Functional Area Type{" "}
-                {sortKey === "functionaltype"
-                  ? sortOrder === "asc"
-                    ? "▲"
-                    : "▼"
-                  : ""}
-              </th>
-              <th
-                className="border px-4 py-2 cursor-pointer"
-                onClick={() => {
-                  setSortKey("functionalstatus");
-                  setSortOrder(
-                    sortKey === "functionalstatus" && sortOrder === "asc"
-                      ? "desc"
-                      : "asc"
-                  );
-                }}
-              >
-                Status{" "}
-                {sortKey === "functionalstatus"
-                  ? sortOrder === "asc"
-                    ? "▲"
-                    : "▼"
-                  : ""}
-              </th>
+                <th
+                  className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
+                  onClick={() => {
+                    setSortKey("functionaltype");
+                    setSortOrder(
+                      sortKey === "functionaltype" && sortOrder === "asc"
+                        ? "desc"
+                        : "asc"
+                    );
+                  }}
+                >
+                  Functional Area Type{" "}
+                  {sortKey === "functionaltype"
+                    ? sortOrder === "asc"
+                      ? "▲"
+                      : "▼"
+                    : ""}
+                </th>
+                <th
+                  className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
+                  onClick={() => {
+                    setSortKey("functionalstatus");
+                    setSortOrder(
+                      sortKey === "functionalstatus" && sortOrder === "asc"
+                        ? "desc"
+                        : "asc"
+                    );
+                  }}
+                >
+                  Status{" "}
+                  {sortKey === "functionalstatus"
+                    ? sortOrder === "asc"
+                      ? "▲"
+                      : "▼"
+                    : ""}
+                </th>
 
-              <th
-                className="border px-4 py-2 cursor-pointer"
-                onClick={() => {
-                  setSortKey("functionalstartdate");
-                  setSortOrder(
-                    sortKey === "functionalstartdate" && sortOrder === "asc"
-                      ? "desc"
-                      : "asc"
-                  );
-                }}
-              >
-                Start Date{" "}
-                {sortKey === "functionalstartdate"
-                  ? sortOrder === "asc"
-                    ? "▲"
-                    : "▼"
-                  : ""}
-              </th>
-              <th
-                className="border px-4 py-2 cursor-pointer"
-                onClick={() => {
-                  setSortKey("functionalenddate");
-                  setSortOrder(
-                    sortKey === "functionalenddate" && sortOrder === "asc"
-                      ? "desc"
-                      : "asc"
-                  );
-                }}
-              >
-                End Date{" "}
-                {sortKey === "functionalenddate"
-                  ? sortOrder === "asc"
-                    ? "▲"
-                    : "▼"
-                  : ""}
-              </th>
-              <th className="border px-4 py-2">Description</th>
-              <th className="border px-4 py-2">Aligned Client</th>
-              <th className="border px-4 py-2"></th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredFunction.map((functionalarea: any) => (
-              <tr key={functionalarea.id}>
-                <td className="border px-4 py-2">
-                  {functionalarea.functionalname}
-                </td>
-                <td className="border px-4 py-2">
-                  {functionalarea.functionaltype}
-                </td>
-                <td className="border px-4 py-2">
-                  {getStatus(functionalarea)}
-                </td>
-                <td className="border px-4 py-2">
-                  {functionalarea.functionalstartdate}
-                </td>
-                <td className="border px-4 py-2">
-                  {functionalarea.functionalenddate}
-                </td>
-                <td className="border px-4 py-2">
-                  {functionalarea.functionaldescription}
-                </td>
-                <td className="border px-4 py-2">
-                  {Array.isArray(functionalarea.functionalclient)
-                    ? functionalarea.functionalclient.join(", ")
-                    : functionalarea.functionalclient}
-                </td>
-                <td className="border px-4 py-2 relative">
-                  <button
-                    onClick={() =>
-                      setOpenMenuId(
-                        openMenuId === functionalarea.id
-                          ? null
-                          : functionalarea.id
-                      )
-                    }
-                    className="px-2 py-1 rounded hover:bg-gray-200"
-                  >
-                    ⋮
-                  </button>
-
-                  {openMenuId === functionalarea.id && (
-                    <div className="absolute right-0 mt-1 w-28 bg-white border rounded shadow-md z-10">
-                      <button
-                        onClick={() => handleDelete(functionalarea.id)}
-                        className="block w-full text-left px-4 py-2 text-red-600 hover:bg-red-50"
-                      >
-                        Delete
-                      </button>
-                    </div>
-                  )}
-                </td>
+                <th
+                  className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
+                  onClick={() => {
+                    setSortKey("functionalstartdate");
+                    setSortOrder(
+                      sortKey === "functionalstartdate" && sortOrder === "asc"
+                        ? "desc"
+                        : "asc"
+                    );
+                  }}
+                >
+                  Start Date{" "}
+                  {sortKey === "functionalstartdate"
+                    ? sortOrder === "asc"
+                      ? "▲"
+                      : "▼"
+                    : ""}
+                </th>
+                <th
+                  className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
+                  onClick={() => {
+                    setSortKey("functionalenddate");
+                    setSortOrder(
+                      sortKey === "functionalenddate" && sortOrder === "asc"
+                        ? "desc"
+                        : "asc"
+                    );
+                  }}
+                >
+                  End Date{" "}
+                  {sortKey === "functionalenddate"
+                    ? sortOrder === "asc"
+                      ? "▲"
+                      : "▼"
+                    : ""}
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100">
+                  Description
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100">
+                  Aligned Client
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"></th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody className="bg-white divide-y divide-gray-200">
+              {filteredFunction.map((functionalarea: any) => (
+                <tr key={functionalarea.id}>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    {functionalarea.id}
+                  </td>{" "}
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    {functionalarea.functionalname}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    {functionalarea.functionaltype}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    {getStatus(functionalarea)}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    {functionalarea.functionalstartdate}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    {functionalarea.functionalenddate}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    {functionalarea.functionaldescription}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    {Array.isArray(functionalarea.functionalclient)
+                      ? functionalarea.functionalclient.join(", ")
+                      : functionalarea.functionalclient}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium relative">
+                    <button
+                      onClick={() =>
+                        setOpenMenuId(
+                          openMenuId === functionalarea.id
+                            ? null
+                            : functionalarea.id
+                        )
+                      }
+                      className="text-gray-400 hover:text-gray-600 px-2 py-1 rounded hover:bg-gray-100"
+                    >
+                      ⋮
+                    </button>
+
+                    {openMenuId === functionalarea.id && (
+                      <div className="absolute right-0 mt-1 w-28 bg-white border rounded shadow-md z-10">
+                        <button
+                          onClick={() => handleDelete(functionalarea.id)}
+                          className="block w-full text-left px-4 py-2 text-red-600 hover:bg-red-50"
+                        >
+                          Delete
+                        </button>
+                      </div>
+                    )}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          {filteredFunction.length === 0 && (
+            <div className="text-center py-8 text-gray-500">
+              {search
+                ? "No functional found matching your search."
+                : "No functional found."}
+            </div>
+          )}
+        </div>
       )}
     </div>
   );

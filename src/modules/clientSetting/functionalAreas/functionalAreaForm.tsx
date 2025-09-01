@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import Select, { MultiValue } from "react-select";
@@ -37,12 +37,37 @@ export default function FunctionalAreaForm({
       axios.get("http://localhost:3000/clients").then((res) => res.data),
   });
 
+  const [nextId, setNextId] = useState<number>(1);
+
+  useEffect(() => {
+    axios.get("http://localhost:3000/functionalarea").then((res) => {
+      const all = res.data as any[];
+      const numericIds = (Array.isArray(all) ? all : [])
+        .map((e) => Number(e?.id))
+        .filter((n) => Number.isFinite(n)) as number[];
+      setNextId((numericIds.length ? Math.max(...numericIds) : 0) + 1);
+    });
+  }, []);
+
   const createFunctionalArea = useMutation({
-    mutationFn: (newFunctionalArea: any) =>
-      axios.post("http://localhost:3000/functionalarea", newFunctionalArea),
-    onSuccess: () =>
-      queryClient.invalidateQueries({ queryKey: ["functionalareas"] }),
+    mutationFn: async (newFunctionalArea: any) => {
+      return axios.post("http://localhost:3000/functionalarea", {
+        id: nextId,
+        ...newFunctionalArea,
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["functionalarea"] });
+      onClose();
+    },
   });
+
+  // const createFunctionalArea = useMutation({
+  //   mutationFn: (newFunctionalArea: any) =>
+  //     axios.post("http://localhost:3000/functionalarea", newFunctionalArea),
+  //   onSuccess: () =>
+  //     queryClient.invalidateQueries({ queryKey: ["functionalareas"] }),
+  // });
 
   function handleChange(
     e: React.ChangeEvent<

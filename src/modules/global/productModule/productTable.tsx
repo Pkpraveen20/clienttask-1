@@ -2,7 +2,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import { useState, useEffect } from "react";
 import ProductForm from "./productForm";
-import { Building } from "lucide-react";
+import { Box } from "lucide-react";
 
 export default function ProductTable() {
   const [showForm, setShowForm] = useState(false);
@@ -96,7 +96,7 @@ export default function ProductTable() {
     <div>
       <div className="flex justify-between items-center mb-4">
         <h2 className="flex items-center gap-2 text-2xl font-bold">
-          <Building className="w-6 h-6" />
+          <Box className="w-6 h-6" />
           Products - {ProductsCount} {ProductsCount !== 1 ? "" : ""}
         </h2>
 
@@ -132,7 +132,7 @@ export default function ProductTable() {
               &times;
             </button>
             <h2 className="text-2xl font-semibold mb-6 text-gray-800 flex items-center gap-2">
-              <Building className="w-6 h-6" />
+              <Box className="w-6 h-6" />
               Create New Products
             </h2>
             <ProductForm onClose={() => setShowForm(false)} />
@@ -166,144 +166,153 @@ export default function ProductTable() {
         <div className="bg-white rounded-lg shadow overflow-y-auto">
           <table className="w-full">
             <thead className="bg-gray-50 border-b border-gray-200">
-            <tr className="bg-gray-100">
-              <th
-                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
-                onClick={() => {
-                  setSortKey("id");
-                  setSortOrder(
-                    sortKey === "id" && sortOrder === "asc" ? "desc" : "asc"
-                  );
-                }}
-              >
-                <div className="flex items-center gap-1">
-                  Product ID
-                  {sortKey === "id" && (
-                    <span className="text-blue-600">
-                      {sortOrder === "asc" ? "▲" : "▼"}
-                    </span>
-                  )}
-                </div>
-              </th>
-              <th
-                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
-                onClick={() => {
-                  setSortKey("productname");
-                  setSortOrder(
-                    sortKey === "productname" && sortOrder === "asc"
-                      ? "desc"
-                      : "asc"
-                  );
-                }}
-              >
-                Products Name{" "}
-                {sortKey === "productname"
-                  ? sortOrder === "asc"
-                    ? "▲"
-                    : "▼"
-                  : ""}
-              </th>
-              <th
-                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
-                onClick={() => {
-                  setSortKey("status");
-                  setSortOrder(
-                    sortKey === "status" && sortOrder === "asc" ? "desc" : "asc"
-                  );
-                }}
-              >
-                Products Status{" "}
-                {sortKey === "status" ? (sortOrder === "asc" ? "▲" : "▼") : ""}
-              </th>
-              <th
-                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100">
-                Description</th>
-              <th
-                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
-                onClick={() => {
-                  setSortKey("startdate");
-                  setSortOrder(
-                    sortKey === "startdate" && sortOrder === "asc"
-                      ? "desc"
-                      : "asc"
-                  );
-                }}
-              >
-                Start Date{" "}
-                {sortKey === "startdate"
-                  ? sortOrder === "asc"
-                    ? "▲"
-                    : "▼"
-                  : ""}
-              </th>
-              <th
-                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
-                onClick={() => {
-                  setSortKey("enddate");
-                  setSortOrder(
-                    sortKey === "enddate" && sortOrder === "asc"
-                      ? "desc"
-                      : "asc"
-                  );
-                }}
-              >
-                End Date{" "}
-                {sortKey === "enddate" ? (sortOrder === "asc" ? "▲" : "▼") : ""}
-              </th>
-              {/* <th 
-                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
-              >
-                Address</th> */}
+              <tr className="bg-gray-100">
+                <th
+                  className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
+                  onClick={() => {
+                    setSortKey("id");
+                    setSortOrder(
+                      sortKey === "id" && sortOrder === "asc" ? "desc" : "asc"
+                    );
+                  }}
+                >
+                  <div className="flex items-center gap-1">
+                    Product ID
+                    {sortKey === "id" && (
+                      <span className="text-blue-600">
+                        {sortOrder === "asc" ? "▲" : "▼"}
+                      </span>
+                    )}
+                  </div>
+                </th>
+                <th
+                  className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
+                  onClick={() => {
+                    setSortKey("productname");
+                    setSortOrder(
+                      sortKey === "productname" && sortOrder === "asc"
+                        ? "desc"
+                        : "asc"
+                    );
+                  }}
+                >
+                  Products Name{" "}
+                  {sortKey === "productname"
+                    ? sortOrder === "asc"
+                      ? "▲"
+                      : "▼"
+                    : ""}
+                </th>
+                <th
+                  className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
+                  onClick={() => {
+                    setSortKey("status");
+                    setSortOrder(
+                      sortKey === "status" && sortOrder === "asc"
+                        ? "desc"
+                        : "asc"
+                    );
+                  }}
+                >
+                  Products Status{" "}
+                  {sortKey === "status"
+                    ? sortOrder === "asc"
+                      ? "▲"
+                      : "▼"
+                    : ""}
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100">
+                  Description
+                </th>
+                <th
+                  className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
+                  onClick={() => {
+                    setSortKey("startdate");
+                    setSortOrder(
+                      sortKey === "startdate" && sortOrder === "asc"
+                        ? "desc"
+                        : "asc"
+                    );
+                  }}
+                >
+                  Start Date{" "}
+                  {sortKey === "startdate"
+                    ? sortOrder === "asc"
+                      ? "▲"
+                      : "▼"
+                    : ""}
+                </th>
+                <th
+                  className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
+                  onClick={() => {
+                    setSortKey("enddate");
+                    setSortOrder(
+                      sortKey === "enddate" && sortOrder === "asc"
+                        ? "desc"
+                        : "asc"
+                    );
+                  }}
+                >
+                  End Date{" "}
+                  {sortKey === "enddate"
+                    ? sortOrder === "asc"
+                      ? "▲"
+                      : "▼"
+                    : ""}
+                </th>
+              
 
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"></th>
-            </tr>
-          </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
-            {filteredProducts.map((product: any) => (
-              <tr key={product.id}>
-                <td className="px-6 py-4 whitespace-nowrap">
-                    {product.id}</td>{" "}
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    {product.productname}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    {getStatus(product)}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                  {product.productdescription}
-                </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    {product.startdate}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    {product.enddate}</td>
-                  {/* <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    {product.address}</td> */}
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium relative">
-                  <button
-                    onClick={() =>
-                      setOpenMenuId(
-                        openMenuId === product.id ? null : product.id
-                      )
-                    }
-                      className="text-gray-400 hover:text-gray-600 px-2 py-1 rounded hover:bg-gray-100"
-                  >
-                    ⋮
-                  </button>
-
-                  {openMenuId === product.id && (
-                    <div className="absolute right-0 mt-1 w-28 bg-white border rounded shadow-md z-10">
-                      <button
-                        onClick={() => handleDelete(product.id)}
-                        className="block w-full text-left px-4 py-2 text-red-600 hover:bg-red-50"
-                      >
-                        Delete
-                      </button>
-                    </div>
-                  )}
-                </td>
               </tr>
-            ))}
-          </tbody>
-        </table>
-{filteredProducts.length === 0 && (
+            </thead>
+            <tbody className="bg-white divide-y divide-gray-200">
+              {filteredProducts.map((product: any) => (
+                <tr key={product.id}>
+                  <td className="px-6 py-4 whitespace-nowrap">{product.id}</td>{" "}
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    {product.productname}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    {getStatus(product)}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    {product.productdescription}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    {product.startdate}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    {product.enddate}
+                  </td>
+                 
+                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium relative">
+                    <button
+                      onClick={() =>
+                        setOpenMenuId(
+                          openMenuId === product.id ? null : product.id
+                        )
+                      }
+                      className="text-gray-400 hover:text-gray-600 px-2 py-1 rounded hover:bg-gray-100"
+                    >
+                      ⋮
+                    </button>
+
+                    {openMenuId === product.id && (
+                      <div className="absolute right-0 mt-1 w-28 bg-white border rounded shadow-md z-10">
+                        <button
+                          onClick={() => handleDelete(product.id)}
+                          className="block w-full text-left px-4 py-2 text-red-600 hover:bg-red-50"
+                        >
+                          Delete
+                        </button>
+                      </div>
+                    )}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          {filteredProducts.length === 0 && (
             <div className="text-center py-8 text-gray-500">
               {search
                 ? "No Products found matching your search."

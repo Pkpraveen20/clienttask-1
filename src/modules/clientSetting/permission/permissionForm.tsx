@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import Select, { MultiValue } from "react-select";
@@ -14,7 +14,7 @@ export default function PermissionForm({ onClose }: { onClose: () => void }) {
     permissionstartdate: string;
     permissionenddate: string;
     permissiondefinition: string;
-   permissionclient: MultiValue<ClientOption>;
+    permissionclient: MultiValue<ClientOption>;
     permissionrole: MultiValue<RoleOption>;
   }>({
     permissionname: "",
@@ -41,12 +41,29 @@ export default function PermissionForm({ onClose }: { onClose: () => void }) {
   });
 
   if (rolesError) console.error("Roles fetch error:", rolesError);
+  const [nextId, setNextId] = useState<number>(1);
+
+  useEffect(() => {
+    axios.get("http://localhost:3000/permission").then((res) => {
+      const all = res.data as any[];
+      const numericIds = (Array.isArray(all) ? all : [])
+        .map((e) => Number(e?.id))
+        .filter((n) => Number.isFinite(n)) as number[];
+      setNextId((numericIds.length ? Math.max(...numericIds) : 0) + 1);
+    });
+  }, []);
 
   const createPermission = useMutation({
-    mutationFn: (newPermission: any) =>
-      axios.post("http://localhost:3000/permission", newPermission),
-    onSuccess: () =>
-      queryClient.invalidateQueries({ queryKey: ["permissions"] }),
+    mutationFn: async (newPermission: any) => {
+      return axios.post("http://localhost:3000/permission", {
+        id: nextId,
+        ...newPermission,
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["permission"] });
+      onClose();
+    },
   });
 
   function handleChange(
@@ -118,7 +135,7 @@ export default function PermissionForm({ onClose }: { onClose: () => void }) {
           <input
             id="permissionname"
             name="permissionname"
-            placeholder="Functional Area Name"
+            placeholder="Permission Name"
             value={form.permissionname}
             onChange={handleChange}
             className="border border-gray-300 p-2 rounded w-full focus:ring-2 focus:ring-blue-200"
@@ -128,7 +145,6 @@ export default function PermissionForm({ onClose }: { onClose: () => void }) {
 
         <div className="flex gap-4">
           <div className="flex-1">
-            
             <DateInput
               id="permissionstartdate"
               name="permissionstartdate"
@@ -141,7 +157,6 @@ export default function PermissionForm({ onClose }: { onClose: () => void }) {
             />
           </div>
           <div className="flex-1">
-           
             <DateInput
               id="permissionenddate"
               name="permissionenddate"
@@ -152,7 +167,6 @@ export default function PermissionForm({ onClose }: { onClose: () => void }) {
               }
               required
             />
-            
           </div>
         </div>
         <div>

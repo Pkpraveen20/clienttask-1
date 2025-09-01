@@ -152,6 +152,7 @@ export default function ProductForm({ onClose }: { onClose: () => void }) {
               required
             />
           </div>
+          </div>
            <div>
           <label
             htmlFor="productimage"
@@ -176,9 +177,8 @@ export default function ProductForm({ onClose }: { onClose: () => void }) {
               src={form.productimage}
               alt="Preview"
               className="mt-2 max-h-32"
-            />
+            />   
           )}
-        </div>
         </div>
         <div className="flex gap-2 justify-end pt-2">
           <button

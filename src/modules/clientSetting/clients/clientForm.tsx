@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import DateInput from "../../../components/dataPicker";
@@ -14,10 +14,29 @@ export default function ClientForm({ onClose }: { onClose: () => void }) {
   });
   const queryClient = useQueryClient();
 
+  const [nextId, setNextId] = useState<number>(1);
+
+  useEffect(() => {
+    axios.get("http://localhost:3000/clients").then((res) => {
+      const all = res.data as any[];
+      const numericIds = (Array.isArray(all) ? all : [])
+        .map((e) => Number(e?.id))
+        .filter((n) => Number.isFinite(n)) as number[];
+      setNextId((numericIds.length ? Math.max(...numericIds) : 0) + 1);
+    });
+  }, []);
+
   const createClient = useMutation({
-    mutationFn: (newClient: typeof form) =>
-      axios.post("http://localhost:3000/clients", newClient),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["clients"] }),
+    mutationFn: async (newClient: typeof form) => {
+      return axios.post("http://localhost:3000/clients", {
+        id: nextId,
+        ...newClient,
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["clients"] });
+      onClose();
+    },
   });
 
   function handleChange(
