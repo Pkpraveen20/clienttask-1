@@ -3,6 +3,9 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import { Book  } from "lucide-react";
 import TopicForm from "./topicForm";
+import { useNavigate } from "@tanstack/react-router";
+import TopicEditModal from "./topicEditModal";
+
 
 export default function TopicTable() {
   const [showForm, setShowForm] = useState(false);
@@ -11,6 +14,10 @@ export default function TopicTable() {
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
   const queryClient = useQueryClient();
   const [openMenuId, setOpenMenuId] = useState<number | null>(null);
+    const [editId, setEditId] = useState<number | null>(null);
+
+    const navigate = useNavigate();
+
 
   const { data, isLoading } = useQuery({
     queryKey: ["topic"],
@@ -37,6 +44,12 @@ export default function TopicTable() {
     if (confirm("Are you sure you want to delete this topic?")) {
       deleteMutation.mutate(id);
     }
+  }
+  function handleViewDetails(id: number) {
+    navigate({ to: `/topic/${id}` });
+  }
+  function handleEdit(id: number) {
+    setEditId(id);
   }
 
   function parseDate(ddmmyyyy: string): Date {
@@ -151,6 +164,36 @@ export default function TopicTable() {
           to { opacity: 1; transform: scale(1);}
         }
       `}
+          </style>
+        </div>
+      )}
+
+      {editId !== null && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
+          <div className="relative bg-white rounded-xl shadow-2xl w-full max-w-lg p-8 border border-gray-100 animate-fadeIn">
+            <button
+              onClick={() => setEditId(null)}
+              className="absolute top-4 right-4 text-gray-400 hover:text-red-500 text-2xl font-bold focus:outline-none"
+              aria-label="Close"
+            >
+              &times;
+            </button>
+            <h2 className="text-2xl font-semibold mb-6 text-gray-800 flex items-center gap-2">
+              <Book className="w-6 h-6" />
+              Edit Product
+            </h2>
+            <TopicEditModal id={editId} onClose={() => setEditId(null)} />
+          </div>
+          <style>
+            {`
+              .animate-fadeIn {
+                animation: fadeIn 0.25s ease;
+              }
+              @keyframes fadeIn {
+                from { opacity: 0; transform: scale(0.97);}
+                to { opacity: 1; transform: scale(1);}
+              }
+            `}
           </style>
         </div>
       )}
@@ -306,7 +349,19 @@ export default function TopicTable() {
                     </button>
 
                     {openMenuId === topic.id && (
-                      <div className="absolute right-0 mt-1 w-28 bg-white border rounded shadow-md z-10">
+                      <div className="absolute right-0 mt-1 w-32 bg-white border rounded shadow-md z-10">
+                        <button
+                          onClick={() => handleViewDetails(topic.id)}
+                          className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                        >
+                          View
+                        </button>
+                        <button
+                          onClick={() => handleEdit(topic.id)}
+                          className="block w-full text-left px-4 py-2 text-sm text-blue-700 hover:bg-blue-50"
+                        >
+                          Edit
+                        </button>
                         <button
                           onClick={() => handleDelete(topic.id)}
                           className="block w-full text-left px-4 py-2 text-red-600 hover:bg-red-50"

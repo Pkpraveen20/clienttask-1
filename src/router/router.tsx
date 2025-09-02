@@ -13,6 +13,9 @@ import PermissionTable from "../modules/clientSetting/permission/permissionTable
 import ProductTable from "../modules/global/productModule/productTable";
 import TopicTable from "../modules/global/topicModule/topicTable";
 import ContentTable from "../modules/global/contentModule/contentTable";
+import ProductView from "../modules/global/productModule/productView";
+import ProductEdit from "../modules/global/productModule/productEdit";
+import TopicView from "../modules/global/topicModule/topicView";
 
 const rootRoute = createRootRoute({ component: App });
 
@@ -53,17 +56,31 @@ const productRoute = createRoute({
   path: "/product",
   component: ProductTable,
 });
+const productViewRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/product/$id",
+  component: ProductView,
+});
+// const productEditRoute = createRoute({
+//   getParentRoute: () => rootRoute,
+//   path: "/product/$id/edit",
+//   component: ProductEdit,
+// });
 const topicRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: "/topic",
   component: TopicTable,
+});
+const topicViewRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/topic/$id",
+  component: TopicView,
 });
 const contentRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: "/content",
   component: ContentTable,
 });
-
 
 const routeTree = rootRoute.addChildren([
   clientRoute,
@@ -75,6 +92,9 @@ const routeTree = rootRoute.addChildren([
   productRoute,
   topicRoute,
   contentRoute,
+  productViewRoute,
+  topicViewRoute,
+  // productEditRoute,
 ]);
 
 export const router = createRouter({ routeTree });

@@ -9,171 +9,192 @@ import {
   Box,
   Book,
   BookCheck,
-  ChevronDown,
+  Settings,
+  ChevronLeft,
   ChevronRight,
-  ChevronsLeft,
-  ChevronsRight,
 } from "lucide-react";
 
 export default function Sidebar() {
-  const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [open, setOpen] = useState({
-    global: true,
-    engagements: true,
-    client: true,
-  });
-
-  const toggle = (key: keyof typeof open) =>
-    setOpen((prev) => ({ ...prev, [key]: !prev[key] }));
+  const [activeSection, setActiveSection] = useState<string | null>("global");
+  const [isPrimaryOpen, setIsPrimaryOpen] = useState(true);
+  const [isSecondaryOpen, setIsSecondaryOpen] = useState(true);
 
   return (
-    <aside
-      className={`relative h-screen bg-white shadow-lg transition-all duration-300 ${
-        sidebarOpen ? "w-64" : "w-16"
-      }`}
-    >
-      {/* Toggle Button inside sidebar */}
-      <button
-        onClick={() => setSidebarOpen(!sidebarOpen)}
-        className="absolute -right-3 top-4 bg-gray-200 p-1 rounded-full shadow"
+    <div className="flex h-screen">
+      <aside
+        className={`${
+          isPrimaryOpen ? "w-16" : "w-12"
+        } bg-gray-100 border-r flex flex-col items-center py-4 gap-4 relative transition-all duration-300`}
       >
-        {sidebarOpen ? (
-          <ChevronsLeft className="w-5 h-5" />
-        ) : (
-          <ChevronsRight className="w-5 h-5" />
-        )}
-      </button>
+        {/* Toggle Button */}
+        {/* <button
+          onClick={() => setIsPrimaryOpen(!isPrimaryOpen)}
+          className="absolute -right-3 top-4 bg-white border rounded-full shadow p-1"
+        >
+          {isPrimaryOpen ? (
+            <ChevronLeft className="w-4 h-4" />
+          ) : (
+            <ChevronRight className="w-4 h-4" />
+          )}
+        </button> */}
 
-      {/* Sidebar Content */}
-      <div className="p-4">
-        {sidebarOpen && <h2 className="text-xl font-bold mb-4">Client Manager</h2>}
-        <nav className="flex flex-col gap-4">
-          {/* Global Section */}
-          <div>
-            <button
-              onClick={() => toggle("global")}
-              className="flex items-center justify-between w-full text-sm font-semibold text-gray-600 uppercase"
-            >
-              {sidebarOpen ? (
-                <>
-                  <span>Global Settings</span>
-                  {open.global ? (
-                    <ChevronDown className="w-4 h-4" />
-                  ) : (
-                    <ChevronRight className="w-4 h-4" />
-                  )}
-                </>
-              ) : (
-                <Building className="w-5 h-5" />
+        <button
+          onClick={() =>
+            setActiveSection(activeSection === "global" ? null : "global")
+          }
+          className={`p-2 rounded-md hover:bg-gray-200 ${
+            activeSection === "global" ? "bg-blue-100 text-blue-600" : ""
+          }`}
+          title="Global Settings"
+        >
+          <Settings className="w-6 h-6" />
+        </button>
+
+        <button
+          onClick={() =>
+            setActiveSection(
+              activeSection === "engagements" ? null : "engagements"
+            )
+          }
+          className={`p-2 rounded-md hover:bg-gray-200 ${
+            activeSection === "engagements" ? "bg-blue-100 text-blue-600" : ""
+          }`}
+          title="Engagements"
+        >
+          <Calendar className="w-6 h-6" />
+        </button>
+
+        <button
+          onClick={() =>
+            setActiveSection(activeSection === "client" ? null : "client")
+          }
+          className={`p-2 rounded-md hover:bg-gray-200 ${
+            activeSection === "client" ? "bg-blue-100 text-blue-600" : ""
+          }`}
+          title="Client Settings"
+        >
+          <Building className="w-6 h-6" />
+        </button>
+      </aside>
+
+      {activeSection && (
+        <aside
+          className={`${
+            isSecondaryOpen ? "w-64" : "w-16"
+          } bg-white shadow-md p-4 relative transition-all duration-300`}
+        >
+          <button
+            onClick={() => setIsSecondaryOpen(!isSecondaryOpen)}
+            className="absolute -right-3 top-4 bg-white border rounded-full shadow p-1"
+          >
+            {isSecondaryOpen ? (
+              <ChevronLeft className="w-4 h-4" />
+            ) : (
+              <ChevronRight className="w-4 h-4" />
+            )}
+          </button>
+
+          {activeSection === "global" && (
+            <>
+              {isSecondaryOpen && (
+                <h3 className="text-sm font-semibold text-gray-500 uppercase mb-2">
+                  Global Settings
+                </h3>
               )}
-            </button>
-            {open.global && sidebarOpen && (
-              <div className="mt-2 flex flex-col gap-2 pl-3">
-                <Link to="/" className="flex items-center gap-2 [&.active]:font-bold">
+              <nav className="flex flex-col gap-6">
+                <Link
+                  to="/"
+                  className="flex items-center gap-2 hover:text-blue-600"
+                  title="Client"
+                >
                   <Building className="w-5 h-5" />
-                  Clients
+                  {isSecondaryOpen && "Clients"}
                 </Link>
-                <Link to="/roles" className="flex items-center gap-2 [&.active]:font-bold">
+                <Link
+                  to="/roles"
+                  className="flex items-center gap-2 hover:text-blue-600"
+                  title="roles"
+                >
                   <User className="w-5 h-5" />
-                  Roles
+                  {isSecondaryOpen && "Roles"}
                 </Link>
                 <Link
                   to="/functional-areas"
-                  className="flex items-center gap-2 [&.active]:font-bold"
+                  className="flex items-center gap-2 hover:text-blue-600"
+                  title="Functional Area"
                 >
                   <Folder className="w-5 h-5" />
-                  Functional Areas
+                  {isSecondaryOpen && "Functional Areas"}
                 </Link>
                 <Link
                   to="/permissions"
-                  className="flex items-center gap-2 [&.active]:font-bold"
+                  className="flex items-center gap-2 hover:text-blue-600"
+                  title="Permission"
                 >
                   <ShieldCheck className="w-5 h-5" />
-                  Permissions
+                  {isSecondaryOpen && "Permissions"}
                 </Link>
-              </div>
-            )}
-          </div>
+              </nav>
+            </>
+          )}
 
-          {/* Engagements Section */}
-          <div>
-            <button
-              onClick={() => toggle("engagements")}
-              className="flex items-center justify-between w-full text-sm font-semibold text-gray-600 uppercase"
-            >
-              {sidebarOpen ? (
-                <>
-                  <span>Engagements</span>
-                  {open.engagements ? (
-                    <ChevronDown className="w-4 h-4" />
-                  ) : (
-                    <ChevronRight className="w-4 h-4" />
-                  )}
-                </>
-              ) : (
-                <Calendar className="w-5 h-5" />
+          {activeSection === "engagements" && (
+            <>
+              {isSecondaryOpen && (
+                <h3 className="text-sm font-semibold text-gray-500 uppercase mb-2">
+                  Engagements
+                </h3>
               )}
-            </button>
-            {open.engagements && sidebarOpen && (
-              <div className="mt-2 flex flex-col gap-2 pl-3">
+              <nav className="flex flex-col gap-6">
                 <Link
                   to="/engagements"
-                  className="flex items-center gap-2 [&.active]:font-bold"
+                  className="flex items-center gap-2 hover:text-blue-600"
+                  title="Engagement"
                 >
                   <Calendar className="w-5 h-5" />
-                  Engagements
+                  {isSecondaryOpen && "Engagements"}
                 </Link>
-              </div>
-            )}
-          </div>
+              </nav>
+            </>
+          )}
 
-          {/* Client Settings Section */}
-          <div>
-            <button
-              onClick={() => toggle("client")}
-              className="flex items-center justify-between w-full text-sm font-semibold text-gray-600 uppercase"
-            >
-              {sidebarOpen ? (
-                <>
-                  <span>Client Settings</span>
-                  {open.client ? (
-                    <ChevronDown className="w-4 h-4" />
-                  ) : (
-                    <ChevronRight className="w-4 h-4" />
-                  )}
-                </>
-              ) : (
-                <Box className="w-5 h-5" />
+          {activeSection === "client" && (
+            <>
+              {isSecondaryOpen && (
+                <h3 className="text-sm font-semibold text-gray-500 uppercase mb-2">
+                  Client Settings
+                </h3>
               )}
-            </button>
-            {open.client && sidebarOpen && (
-              <div className="mt-2 flex flex-col gap-2 pl-3">
+              <nav className="flex flex-col gap-6">
                 <Link
                   to="/product"
-                  className="flex items-center gap-2 [&.active]:font-bold"
+                  className="flex items-center gap-2 hover:text-blue-600"
+                  title="Product"
                 >
                   <Box className="w-5 h-5" />
-                  Product
+                  {isSecondaryOpen && "Product"}
                 </Link>
                 <Link
                   to="/topic"
-                  className="flex items-center gap-2 [&.active]:font-bold"
+                  className="flex items-center gap-2 hover:text-blue-600"
+                  title="Topic"
                 >
                   <Book className="w-5 h-5" />
-                  Topic
+                  {isSecondaryOpen && "Topic"}
                 </Link>
                 <Link
                   to="/content"
-                  className="flex items-center gap-2 [&.active]:font-bold"
+                  className="flex items-center gap-2 hover:text-blue-600"
+                  title="Content"
                 >
                   <BookCheck className="w-5 h-5" />
-                  Content
+                  {isSecondaryOpen && "Content"}
                 </Link>
-              </div>
-            )}
-          </div>
-        </nav>
-      </div>
-    </aside>
+              </nav>
+            </>
+          )}
+        </aside>
+      )}
+    </div>
   );
 }

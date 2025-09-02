@@ -3,14 +3,18 @@ import axios from "axios";
 import { useState, useEffect } from "react";
 import ProductForm from "./productForm";
 import { Box } from "lucide-react";
+import ProductEditModal from "./productEditModal";
+import { useNavigate } from "@tanstack/react-router";
 
 export default function ProductTable() {
   const [showForm, setShowForm] = useState(false);
+  const [editId, setEditId] = useState<number | null>(null);
   const [search, setSearch] = useState("");
   const [sortKey, setSortKey] = useState("name");
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
   const queryClient = useQueryClient();
   const [openMenuId, setOpenMenuId] = useState<number | null>(null);
+  const navigate = useNavigate();
 
   const { data, isLoading } = useQuery({
     queryKey: ["product"],
@@ -34,6 +38,12 @@ export default function ProductTable() {
     if (confirm("Are you sure you want to delete this product?")) {
       deleteMutation.mutate(id);
     }
+  }
+  function handleViewDetails(id: number) {
+    navigate({ to: `/product/${id}` });
+  }
+  function handleEdit(id: number) {
+    setEditId(id);
   }
 
   function parseDate(ddmmyyyy: string): Date {
@@ -136,6 +146,36 @@ export default function ProductTable() {
               Create New Products
             </h2>
             <ProductForm onClose={() => setShowForm(false)} />
+          </div>
+          <style>
+            {`
+              .animate-fadeIn {
+                animation: fadeIn 0.25s ease;
+              }
+              @keyframes fadeIn {
+                from { opacity: 0; transform: scale(0.97);}
+                to { opacity: 1; transform: scale(1);}
+              }
+            `}
+          </style>
+        </div>
+      )}
+
+      {editId !== null && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
+          <div className="relative bg-white rounded-xl shadow-2xl w-full max-w-lg p-8 border border-gray-100 animate-fadeIn">
+            <button
+              onClick={() => setEditId(null)}
+              className="absolute top-4 right-4 text-gray-400 hover:text-red-500 text-2xl font-bold focus:outline-none"
+              aria-label="Close"
+            >
+              &times;
+            </button>
+            <h2 className="text-2xl font-semibold mb-6 text-gray-800 flex items-center gap-2">
+              <Box className="w-6 h-6" />
+              Edit Product
+            </h2>
+            <ProductEditModal id={editId} onClose={() => setEditId(null)} />
           </div>
           <style>
             {`
@@ -260,7 +300,6 @@ export default function ProductTable() {
                       : "▼"
                     : ""}
                 </th>
-              
 
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"></th>
               </tr>
@@ -284,7 +323,6 @@ export default function ProductTable() {
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                     {product.enddate}
                   </td>
-                 
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium relative">
                     <button
                       onClick={() =>
@@ -298,7 +336,19 @@ export default function ProductTable() {
                     </button>
 
                     {openMenuId === product.id && (
-                      <div className="absolute right-0 mt-1 w-28 bg-white border rounded shadow-md z-10">
+                      <div className="absolute right-0 mt-1 w-32 bg-white border rounded shadow-md z-10">
+                        <button
+                          onClick={() => handleViewDetails(product.id)}
+                          className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                        >
+                          View
+                        </button>
+                        <button
+                          onClick={() => handleEdit(product.id)}
+                          className="block w-full text-left px-4 py-2 text-sm text-blue-700 hover:bg-blue-50"
+                        >
+                          Edit
+                        </button>
                         <button
                           onClick={() => handleDelete(product.id)}
                           className="block w-full text-left px-4 py-2 text-red-600 hover:bg-red-50"
