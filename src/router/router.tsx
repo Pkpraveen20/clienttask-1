@@ -14,8 +14,8 @@ import ProductTable from "../modules/global/productModule/productTable";
 import TopicTable from "../modules/global/topicModule/topicTable";
 import ContentTable from "../modules/global/contentModule/contentTable";
 import ProductView from "../modules/global/productModule/productView";
-import ProductEdit from "../modules/global/productModule/productEdit";
 import TopicView from "../modules/global/topicModule/topicView";
+import ContentView from "../modules/global/contentModule/contentView";
 
 const rootRoute = createRootRoute({ component: App });
 
@@ -61,11 +61,7 @@ const productViewRoute = createRoute({
   path: "/product/$id",
   component: ProductView,
 });
-// const productEditRoute = createRoute({
-//   getParentRoute: () => rootRoute,
-//   path: "/product/$id/edit",
-//   component: ProductEdit,
-// });
+
 const topicRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: "/topic",
@@ -81,6 +77,11 @@ const contentRoute = createRoute({
   path: "/content",
   component: ContentTable,
 });
+const contentViewRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/content/$id",
+  component: ContentView,
+});
 
 const routeTree = rootRoute.addChildren([
   clientRoute,
@@ -94,7 +95,7 @@ const routeTree = rootRoute.addChildren([
   contentRoute,
   productViewRoute,
   topicViewRoute,
-  // productEditRoute,
+  contentViewRoute,
 ]);
 
 export const router = createRouter({ routeTree });

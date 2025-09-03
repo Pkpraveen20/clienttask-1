@@ -144,7 +144,6 @@ export default function TopicEditModal({
       className="bg-white p-0 shadow-none rounded-none"
     >
       <div className="space-y-4">
-        {/* Topic Name */}
         <div>
           <label
             htmlFor="topicname"
@@ -163,7 +162,6 @@ export default function TopicEditModal({
           />
         </div>
 
-        {/* Topic Description */}
         <div>
           <label
             htmlFor="topicdescription"
@@ -182,7 +180,6 @@ export default function TopicEditModal({
           />
         </div>
 
-        {/* Start & End Date */}
         <div className="flex gap-4">
           <div className="flex-1">
             <DateInput
@@ -210,7 +207,6 @@ export default function TopicEditModal({
           </div>
         </div>
 
-        {/* Product Select */}
         <div>
           <label
             htmlFor="topicproduct"
@@ -241,7 +237,6 @@ export default function TopicEditModal({
             )}
         </div>
 
-        {/* Image Upload */}
         <div>
           <label
             htmlFor="topicimage"
@@ -269,7 +264,6 @@ export default function TopicEditModal({
           )}
         </div>
 
-        {/* Action Buttons */}
         <div className="flex gap-2 justify-end pt-2">
           <button
             type="button"
