@@ -13,6 +13,8 @@ export interface Engagement {
   speaker: string;
   caterer: string;
   cohost: string;
+  status:string;
+  engagementType:string;
   primaryDateTime: DateTimeSlot[];
   secondaryDateTime?: DateTimeSlot;
   tertiaryDateTime?: DateTimeSlot;
@@ -24,6 +26,8 @@ export interface EngagementFormData {
   speaker: string;
   caterer: string;
   cohost: string;
+  status:string;
+  engagementType:string;
   primaryDateTime: DateTimeSlot;
   secondaryDateTime?: DateTimeSlot;                                 
   tertiaryDateTime?: DateTimeSlot;

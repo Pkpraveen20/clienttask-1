@@ -264,6 +264,9 @@ export default function ProductTable() {
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100">
                   Description
                 </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100">
+                  Engagement Type
+                </th>
                 <th
                   className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
                   onClick={() => {
@@ -316,6 +319,19 @@ export default function ProductTable() {
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                     {product.productdescription}
+                  </td>
+                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    {Array.isArray(product.engagementTypes)
+                      ? product.engagementTypes
+                          .map((c: any) => {
+                            if (typeof c === "object" && c !== null) {
+                              return c.label || c.value || String(c);
+                            }
+                            return String(c);
+                          })
+                          .filter(Boolean)
+                          .join(", ")
+                      : String(product.engagementTypes || "")}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                     {product.startdate}

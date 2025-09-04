@@ -79,6 +79,22 @@ export default function ProductView() {
               </h3>
               <p className="text-gray-800 text-lg">{product.status}</p>
             </div>
+            <div className="bg-black-50 p-4 rounded-lg border border-gray-200">
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                Engagement Type
+              </h3>
+               {Array.isArray(product.engagementTypes)
+                      ? product.engagementTypes
+                          .map((c: any) => {
+                            if (typeof c === "object" && c !== null) {
+                              return c.label || c.value || String(c);
+                            }
+                            return String(c);
+                          })
+                          .filter(Boolean)
+                          .join(", ")
+                      : String(product.engagementTypes || "")}
+            </div>
           </div>
 
           <div className="space-y-6">

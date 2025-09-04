@@ -1,5 +1,9 @@
 import { useState, useEffect } from "react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import {
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
 import axios from "axios";
 import { DateTime } from "luxon";
 import { DateTimeSlot, EngagementFormData } from "./engagementType";
@@ -90,6 +94,8 @@ export default function EngagementForm({ onClose }: EngagementFormProps) {
     caterer: "",
     cohost: "",
     dateTime: [],
+    status: "Active",
+    engagementType: "",
   });
 
   const [slotPicker, setSlotPicker] = useState<DateTimeSlot>({
@@ -113,6 +119,15 @@ export default function EngagementForm({ onClose }: EngagementFormProps) {
     });
   }, []);
 
+  // fetch engagement types
+  const { data: engagementTypes = [] } = useQuery({
+    queryKey: ["engagementTypes"],
+    queryFn: async () => {
+      const res = await axios.get("http://localhost:3000/engagementTypes");
+      return res.data;
+    },
+  });
+
   const createEngagement = useMutation({
     mutationFn: async (newEngagement: EngagementFormData) => {
       return axios.post("http://localhost:3000/engagements", {
@@ -134,6 +149,9 @@ export default function EngagementForm({ onClose }: EngagementFormProps) {
     if (!form.speaker.trim()) newErrors.speaker = "Speaker is required";
     if (!form.caterer.trim()) newErrors.caterer = "Caterer is required";
     if (!form.cohost.trim()) newErrors.cohost = "Cohost is required";
+    if (!form.engagementType)
+      newErrors.engagementType = "Engagement Type is required";
+    if (!form.status) newErrors.status = "Status is required";
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   }
@@ -154,12 +172,6 @@ export default function EngagementForm({ onClose }: EngagementFormProps) {
     if (errors[name]) setErrors((prev) => ({ ...prev, [name]: "" }));
   }
 
-  // function handleSlotFieldChange(field: keyof DateTimeSlot, value: string) {
-  //   setSlotPicker((prev) => ({ ...prev, [field]: value }));
-  //   if (errors["slotPicker"])
-  //     setErrors((prev) => ({ ...prev, slotPicker: "" }));
-  // }
-
   function handleAddSlot() {
     const slotToAdd = { ...slotPicker, id: crypto.randomUUID() };
     if (!slotToAdd.date || !slotToAdd.time || !slotToAdd.timezone) {
@@ -176,7 +188,6 @@ export default function EngagementForm({ onClose }: EngagementFormProps) {
     if (isBlocked(slotToAdd, form.dateTime)) {
       setErrors((prev) => ({
         ...prev,
-
         slotPicker: "This slot overlaps with an existing slot",
       }));
       return;
@@ -217,11 +228,14 @@ export default function EngagementForm({ onClose }: EngagementFormProps) {
       speaker: form.speaker,
       caterer: form.caterer,
       cohost: form.cohost,
+      status: form.status,
+      engagementType: form.engagementType,
       primaryDateTime: form.dateTime[0],
       secondaryDateTime: form.dateTime[1] ?? "-",
       tertiaryDateTime: form.dateTime[2] ?? "-",
     });
   }
+
   const disabledSlots = getDisabledSlots(form.dateTime);
 
   return (
@@ -279,6 +293,7 @@ export default function EngagementForm({ onClose }: EngagementFormProps) {
               </p>
             )}
           </div>
+
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Speaker <span className="text-red-500">*</span>
@@ -296,6 +311,7 @@ export default function EngagementForm({ onClose }: EngagementFormProps) {
               <p className="text-red-500 text-sm mt-1">{errors.speaker}</p>
             )}
           </div>
+
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Caterer <span className="text-red-500">*</span>
@@ -313,6 +329,7 @@ export default function EngagementForm({ onClose }: EngagementFormProps) {
               <p className="text-red-500 text-sm mt-1">{errors.caterer}</p>
             )}
           </div>
+
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Cohost <span className="text-red-500">*</span>
@@ -328,6 +345,58 @@ export default function EngagementForm({ onClose }: EngagementFormProps) {
             />
             {errors.cohost && (
               <p className="text-red-500 text-sm mt-1">{errors.cohost}</p>
+            )}
+          </div>
+
+          {/* Status Dropdown */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Status <span className="text-red-500">*</span>
+            </label>
+            <select
+              name="status"
+              value={form.status}
+              onChange={(e) =>
+                setForm((prev) => ({ ...prev, status: e.target.value }))
+              }
+              className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                errors.status ? "border-red-500" : "border-gray-300"
+              }`}
+            >
+              <option value="Active">Active</option>
+              <option value="Inactive">Inactive</option>
+            </select>
+            {errors.status && (
+              <p className="text-red-500 text-sm mt-1">{errors.status}</p>
+            )}
+          </div>
+
+          {/* Engagement Type Dropdown */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Engagement Type <span className="text-red-500">*</span>
+            </label>
+            <select
+              name="engagementType"
+              value={form.engagementType}
+              onChange={(e) =>
+                setForm((prev) => ({ ...prev, engagementType: e.target.value }))
+              }
+              className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                errors.engagementType ? "border-red-500" : "border-gray-300"
+              }`}
+            >
+              <option value="">-- Select Engagement Type --</option>
+              {engagementTypes.map((et: any) => (
+                <option key={et.id} value={et.title}>
+                  {et.title}
+                </option>
+              ))}
+            </select>
+            {errors.engagementType && (
+              <p className="text-red-500 text-sm mt-1">
+                {errors.engagementType}
+              </p>
             )}
           </div>
         </div>
@@ -427,28 +496,22 @@ export default function EngagementForm({ onClose }: EngagementFormProps) {
             Back
           </button>
         )}
-        <button
-          type="button"
-          onClick={onClose}
-          className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
-        >
-          Cancel
-        </button>
-        {step === 1 ? (
+        {step === 1 && (
           <button
             type="button"
             onClick={handleNext}
-            className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+            className="px-4 py-2 bg-blue-600 text-white rounded-md"
           >
             Next
           </button>
-        ) : (
+        )}
+        {step === 2 && (
           <button
             type="submit"
             disabled={createEngagement.isPending}
-            className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50"
+            className="px-4 py-2 bg-green-600 text-white rounded-md disabled:opacity-50"
           >
-            {createEngagement.isPending ? "Creating..." : "Create Engagement"}
+            {createEngagement.isPending ? "Saving..." : "Save Engagement"}
           </button>
         )}
       </div>

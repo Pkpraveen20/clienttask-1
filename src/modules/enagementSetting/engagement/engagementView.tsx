@@ -8,6 +8,7 @@ import {
   Users,
   Clock,
   CalendarDays,
+  BarChart,
 } from "lucide-react";
 import { DateTimeSlot } from "./engagementType";
 
@@ -151,6 +152,15 @@ export default function EngagementView() {
                 </div>
                 <p className="text-purple-800 text-lg">{engagement.caterer}</p>
               </div>
+              <div className="bg-green-100 p-4 rounded-lg border border-orange-200">
+                <div className="flex items-center gap-2 mb-2">
+                  <BarChart className="w-5 h-5 text-orange-600" />
+                  <h3 className="text-lg font-semibold text-orange-900">
+                    Status
+                  </h3>
+                </div>
+                <p className="text-orange-800 text-lg">{engagement.status}</p>
+              </div>
 
               <div className="bg-orange-50 p-4 rounded-lg border border-orange-200">
                 <div className="flex items-center gap-2 mb-2">
@@ -202,6 +212,15 @@ export default function EngagementView() {
                     ? formatDateTimeDisplay(engagement.tertiaryDateTime)
                     : "Not set"}
                 </p>
+              </div>
+              <div className="bg-orange-50 p-4 rounded-lg border border-orange-200">
+                <div className="flex items-center gap-2 mb-2">
+                  <Users className="w-5 h-5 text-orange-600" />
+                  <h3 className="text-lg font-semibold text-orange-900">
+                    Engagement Type 
+                  </h3>
+                </div>
+                <p className="text-orange-800 text-lg">{engagement.engagementType}</p>
               </div>
 
               <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
