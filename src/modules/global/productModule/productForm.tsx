@@ -297,7 +297,6 @@ export default function ProductForm({ onClose }: { onClose: () => void }) {
           <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
             {engagementTypes.map((et: any, idx: number) => {
               const title = et.title || `Type ${idx + 1}`;
-              // Only allow checkbox if engagement with this title is active in engagements
               const isActiveInEngagements = Array.isArray(engagements)
                 ? engagements.some(
                     (eng: any) =>
