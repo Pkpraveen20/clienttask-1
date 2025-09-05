@@ -79,6 +79,22 @@ export default function TopicView() {
               </h3>
               <p className="text-gray-800 text-lg">{topic.topicstatus}</p>
             </div>
+            <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                Engagement Type
+              </h3>
+              {Array.isArray(topic.engagementTypes)
+                ? topic.engagementTypes
+                    .map((c: any) => {
+                      if (typeof c === "object" && c !== null) {
+                        return c.label || c.value || String(c);
+                      }
+                      return String(c);
+                    })
+                    .filter(Boolean)
+                    .join(", ")
+                : String(topic.engagementTypes || "")}{" "}
+            </div>
           </div>
 
           <div className="space-y-6">
@@ -86,9 +102,7 @@ export default function TopicView() {
               <h3 className="text-lg font-semibold text-green-900 mb-2">
                 Description
               </h3>
-              <p className="text-green-800 text-lg">
-                {topic.topicdescription}
-              </p>
+              <p className="text-green-800 text-lg">{topic.topicdescription}</p>
             </div>
 
             <div className="bg-orange-50 p-4 rounded-lg border border-orange-200">
@@ -97,15 +111,15 @@ export default function TopicView() {
               </h3>
               <p className="text-orange-800 text-lg">{topic.topicenddate}</p>
             </div>
-             <div className="bg-orange-50 p-4 rounded-lg border border-orange-200">
+            <div className="bg-orange-50 p-4 rounded-lg border border-orange-200">
               <h3 className="text-lg font-semibold text-orange-900 mb-2">
-                 Product Name
+                Product Name
               </h3>
               <p className="text-orange-800 text-lg">{topic.topicproduct}</p>
             </div>
 
             <div className="bg-orange-50flex flex-col items-center justify-center">
-                <h3 className="text-lg font-semibold text-orange-900 mb-2">
+              <h3 className="text-lg font-semibold text-orange-900 mb-2">
                 Topic Image
               </h3>
               {topic.topicimage ? (

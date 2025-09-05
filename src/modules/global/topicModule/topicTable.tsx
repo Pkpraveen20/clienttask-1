@@ -1,11 +1,10 @@
 import { useEffect, useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
-import { Book  } from "lucide-react";
+import { Book } from "lucide-react";
 import TopicForm from "./topicForm";
 import { useNavigate } from "@tanstack/react-router";
 import TopicEditModal from "./topicEditModal";
-
 
 export default function TopicTable() {
   const [showForm, setShowForm] = useState(false);
@@ -14,10 +13,9 @@ export default function TopicTable() {
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
   const queryClient = useQueryClient();
   const [openMenuId, setOpenMenuId] = useState<number | null>(null);
-    const [editId, setEditId] = useState<number | null>(null);
+  const [editId, setEditId] = useState<number | null>(null);
 
-    const navigate = useNavigate();
-
+  const navigate = useNavigate();
 
   const { data, isLoading } = useQuery({
     queryKey: ["topic"],
@@ -28,8 +26,7 @@ export default function TopicTable() {
   const deleteMutation = useMutation({
     mutationFn: (id: number) =>
       axios.delete(`http://localhost:3000/topic/${id}`),
-    onSuccess: () => 
-      queryClient.invalidateQueries({ queryKey: ["topic"] }),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["topic"] }),
   });
 
   const updateStatusMutation = useMutation({
@@ -169,8 +166,10 @@ export default function TopicTable() {
       )}
 
       {editId !== null && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
-          <div className="relative bg-white rounded-xl shadow-2xl w-full max-w-lg p-8 border border-gray-100 animate-fadeIn">
+        <div className="fixed inset-0 z-40 flex items-center justify-center bg-black bg-opacity-40">
+          <div 
+          className="relative bg-white rounded-xl shadow-2xl w-full max-w-lg p-8 border border-gray-100 animate-fadeIn"
+          >
             <button
               onClick={() => setEditId(null)}
               className="absolute top-4 right-4 text-gray-400 hover:text-red-500 text-2xl font-bold focus:outline-none"
@@ -308,6 +307,9 @@ export default function TopicTable() {
                     : ""}
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100">
+                  Engagement Type
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100">
                   Description
                 </th>
 
@@ -334,6 +336,19 @@ export default function TopicTable() {
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                     {topic.topicenddate}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    {Array.isArray(topic.engagementTypes)
+                      ? topic.engagementTypes
+                          .map((c: any) => {
+                            if (typeof c === "object" && c !== null) {
+                              return c.label || c.value || String(c);
+                            }
+                            return String(c);
+                          })
+                          .filter(Boolean)
+                          .join(", ")
+                      : String(topic.engagementTypes || "")}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                     {topic.topicdescription}
