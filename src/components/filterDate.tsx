@@ -45,7 +45,7 @@ export default function FilterDate({
     <div className="relative inline-block" ref={dropdownRef}>
       <button
         onClick={() => setShowDateFilter(!showDateFilter)}
-        className="flex items-center gap-2 border rounded px-4 py-1 hover:bg-gray-50 text-gray-700 text-opacity-60"
+        className="w-80 py-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-opacity-60"
       >
         📅{" "}
         {startDate && endDate

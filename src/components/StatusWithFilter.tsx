@@ -14,10 +14,12 @@ export default function StatusFilterDropdown({
 
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  // Close when clicked outside
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(e.target as Node)
+      ) {
         setIsOpen(false);
       }
     };
@@ -38,15 +40,13 @@ export default function StatusFilterDropdown({
 
   return (
     <div className="relative" ref={dropdownRef}>
-      {/* Filter Button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-2 border rounded px-4 py-1 hover:bg-gray-50 text-gray-700 text-opacity-70"
+          className="w-40 py-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
       >
         ⚙️ {statusFilter === "All" ? "Filter" : `Status: ${statusFilter}`}
       </button>
 
-      {/* Dropdown Panel */}
       {isOpen && (
         <div className="absolute mt-2 w-64 bg-white border rounded-lg shadow-lg z-50 p-4 space-y-4">
           <div>
@@ -62,7 +62,6 @@ export default function StatusFilterDropdown({
             </select>
           </div>
 
-          {/* Footer Buttons */}
           <div className="flex justify-end gap-2">
             <button
               onClick={handleClear}

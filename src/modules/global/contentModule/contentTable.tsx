@@ -8,7 +8,7 @@ import ContentEditModal from "./contentEditModule";
 import FilterDate from "../../../components/filterDate";
 import StatusFilterDropdown from "../../../components/StatusWithFilter";
 import searchBg from "../../../assets/search-bg.png";
-
+import { Search } from "lucide-react";
 
 export default function ContentTable() {
   const [showForm, setShowForm] = useState(false);
@@ -223,13 +223,16 @@ export default function ContentTable() {
         </div>
       )}
       <div className="flex items-center gap-4 mb-2">
-        <input
-          type="text"
-          placeholder="Search by name..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          className="border px-2 py-1 rounded w-1/3"
-        />
+        <div>
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+          <input
+            type="text"
+            placeholder="Search ..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="w-80 pl-8 pr-4 py-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          />
+        </div>
         <StatusFilterDropdown
           statusFilter={statusfilteredcontent}
           setStatusFilter={setStatusFilter}
@@ -447,7 +450,6 @@ export default function ContentTable() {
                   : "No content found."}
               </p>
             </div>
-            
           )}
         </div>
       )}

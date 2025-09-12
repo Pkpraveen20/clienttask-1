@@ -9,7 +9,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import StatusFilter from "../../../components/StatusWithFilter";
 import FilterDate from "../../../components/filterDate";
 import searchBg from "../../../assets/search-bg.png";
-
+import { Search } from "lucide-react";
 
 export default function ProductTable() {
   const [showForm, setShowForm] = useState(false);
@@ -216,13 +216,16 @@ export default function ProductTable() {
         </div>
       )}
       <div className="flex items-center gap-4 mb-2">
-        <input
-          type="text"
-          placeholder="Search by name..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          className="border px-2 py-1 rounded w-1/3"
-        />
+        <div >
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+          <input
+            type="text"
+            placeholder="Search ..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="w-80 pl-8 pr-4 py-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          />
+        </div>
         <StatusFilter
           statusFilter={statusFilter}
           setStatusFilter={setStatusFilter}
