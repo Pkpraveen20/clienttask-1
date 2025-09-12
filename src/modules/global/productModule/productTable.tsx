@@ -5,6 +5,11 @@ import ProductForm from "./productForm";
 import { Box } from "lucide-react";
 import ProductEditModal from "./productEditModal";
 import { useNavigate } from "@tanstack/react-router";
+import "react-datepicker/dist/react-datepicker.css";
+import StatusFilter from "../../../components/StatusWithFilter";
+import FilterDate from "../../../components/filterDate";
+import searchBg from "../../../assets/search-bg.png";
+
 
 export default function ProductTable() {
   const [showForm, setShowForm] = useState(false);
@@ -15,6 +20,12 @@ export default function ProductTable() {
   const queryClient = useQueryClient();
   const [openMenuId, setOpenMenuId] = useState<number | null>(null);
   const navigate = useNavigate();
+  const [dateRange, setDateRange] = useState<[Date | null, Date | null]>([
+    null,
+    null,
+  ]);
+  const [startDate, endDate] = dateRange;
+  const [statusFilter, setStatusFilter] = useState<string>("All");
 
   const { data, isLoading } = useQuery({
     queryKey: ["product"],
@@ -65,6 +76,20 @@ export default function ProductTable() {
     let filtered = Products.filter((product) =>
       product.productname.toLowerCase().includes(search.toLowerCase())
     );
+    if (startDate || endDate) {
+      filtered = filtered.filter((product) => {
+        const prodStart = parseDate(product.startdate);
+        const prodEnd = parseDate(product.enddate);
+
+        if (startDate && prodStart < startDate) return false;
+        if (endDate && prodEnd > endDate) return false;
+
+        return true;
+      });
+    }
+    if (statusFilter !== "All") {
+      filtered = filtered.filter((product) => product.status === statusFilter);
+    }
 
     filtered.sort((a, b) => {
       let aValue = a[sortKey];
@@ -149,14 +174,14 @@ export default function ProductTable() {
           </div>
           <style>
             {`
-              .animate-fadeIn {
-                animation: fadeIn 0.25s ease;
-              }
-              @keyframes fadeIn {
-                from { opacity: 0; transform: scale(0.97);}
-                to { opacity: 1; transform: scale(1);}
-              }
-            `}
+                .animate-fadeIn {
+                  animation: fadeIn 0.25s ease;
+                }
+                @keyframes fadeIn {
+                  from { opacity: 0; transform: scale(0.97);}
+                  to { opacity: 1; transform: scale(1);}
+                }
+              `}
           </style>
         </div>
       )}
@@ -179,18 +204,18 @@ export default function ProductTable() {
           </div>
           <style>
             {`
-              .animate-fadeIn {
-                animation: fadeIn 0.25s ease;
-              }
-              @keyframes fadeIn {
-                from { opacity: 0; transform: scale(0.97);}
-                to { opacity: 1; transform: scale(1);}
-              }
-            `}
+                .animate-fadeIn {
+                  animation: fadeIn 0.25s ease;
+                }
+                @keyframes fadeIn {
+                  from { opacity: 0; transform: scale(0.97);}
+                  to { opacity: 1; transform: scale(1);}
+                }
+              `}
           </style>
         </div>
       )}
-      <div className="mb-4">
+      <div className="flex items-center gap-4 mb-2">
         <input
           type="text"
           placeholder="Search by name..."
@@ -198,6 +223,12 @@ export default function ProductTable() {
           onChange={(e) => setSearch(e.target.value)}
           className="border px-2 py-1 rounded w-1/3"
         />
+        <StatusFilter
+          statusFilter={statusFilter}
+          setStatusFilter={setStatusFilter}
+        />
+
+        <FilterDate onApply={setDateRange} />
       </div>
 
       {isLoading ? (
@@ -320,7 +351,7 @@ export default function ProductTable() {
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                     {product.productdescription}
                   </td>
-                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                     {Array.isArray(product.engagementTypes)
                       ? product.engagementTypes
                           .map((c: any) => {
@@ -379,10 +410,17 @@ export default function ProductTable() {
             </tbody>
           </table>
           {filteredProducts.length === 0 && (
-            <div className="text-center py-8 text-gray-500">
-              {search
-                ? "No Products found matching your search."
-                : "No Products found."}
+            <div className="flex flex-col items-center justify-center py-8 text-gray-500">
+              <img
+                src={searchBg}
+                alt="No results"
+                className="w-48 h-48 object-contain mb-4 opacity-80"
+              />
+              <p>
+                {search
+                  ? "No Products found matching your search."
+                  : "No Products found."}
+              </p>
             </div>
           )}
         </div>

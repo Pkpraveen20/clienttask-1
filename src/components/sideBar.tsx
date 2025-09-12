@@ -103,7 +103,7 @@ export default function Sidebar() {
               )}
               <nav className="flex flex-col gap-6">
                 <Link
-                  to="/"
+                  to="/client"
                   className="flex items-center gap-2 hover:text-blue-600"
                   title="Client"
                 >

@@ -14,7 +14,7 @@ export default function ProductForm({ onClose }: { onClose: () => void }) {
     productdescription: "",
     engagementTypes: [] as string[],
   });
-  const [imageError, setImageError] = useState<string>("");
+  const [imageError, setImageError] = useState<string>(""); 
   const queryClient = useQueryClient();
   const [nextId, setNextId] = useState<number>(1);
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -145,7 +145,6 @@ export default function ProductForm({ onClose }: { onClose: () => void }) {
       startdate: formatDateForDB(form.startdate),
       enddate: formatDateForDB(form.enddate),
     };
-
     createProduct.mutate(formattedForm);
   }
 

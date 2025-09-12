@@ -5,6 +5,9 @@ import { Book } from "lucide-react";
 import TopicForm from "./topicForm";
 import { useNavigate } from "@tanstack/react-router";
 import TopicEditModal from "./topicEditModal";
+import StatusFilterDropdown from "../../../components/StatusWithFilter";
+import FilterDate from "../../../components/filterDate";
+import searchBg from "../../../assets/search-bg.png";
 
 export default function TopicTable() {
   const [showForm, setShowForm] = useState(false);
@@ -14,6 +17,12 @@ export default function TopicTable() {
   const queryClient = useQueryClient();
   const [openMenuId, setOpenMenuId] = useState<number | null>(null);
   const [editId, setEditId] = useState<number | null>(null);
+  const [dateRange, setDateRange] = useState<[Date | null, Date | null]>([
+    null,
+    null,
+  ]);
+  const [startDate, endDate] = dateRange;
+  const [statusfilteredtopic, setStatusFilter] = useState<string>("All");
 
   const navigate = useNavigate();
 
@@ -68,6 +77,22 @@ export default function TopicTable() {
     let filteredTopic = topics.filter((topic) =>
       topic.topicname.toLowerCase().includes(search.toLowerCase())
     );
+    if (startDate || endDate) {
+      filteredTopic = filteredTopic.filter((topic) => {
+        const topicstartdate = parseDate(topic.topicstartdate);
+        const topicenddate = parseDate(topic.topicenddate);
+
+        if (startDate && topicstartdate < startDate) return false;
+        if (endDate && topicenddate > endDate) return false;
+
+        return true;
+      });
+    }
+    if (statusfilteredtopic !== "All") {
+      filteredTopic = filteredTopic.filter(
+        (topic) => topic.topicstatus === statusfilteredtopic
+      );
+    }
 
     filteredTopic.sort((a, b) => {
       let aValue = a[sortKey];
@@ -167,9 +192,7 @@ export default function TopicTable() {
 
       {editId !== null && (
         <div className="fixed inset-0 z-40 flex items-center justify-center bg-black bg-opacity-40">
-          <div 
-          className="relative bg-white rounded-xl shadow-2xl w-full max-w-lg p-8 border border-gray-100 animate-fadeIn"
-          >
+          <div className="relative bg-white rounded-xl shadow-2xl w-full max-w-lg p-8 border border-gray-100 animate-fadeIn">
             <button
               onClick={() => setEditId(null)}
               className="absolute top-4 right-4 text-gray-400 hover:text-red-500 text-2xl font-bold focus:outline-none"
@@ -196,7 +219,7 @@ export default function TopicTable() {
           </style>
         </div>
       )}
-      <div className="mb-4">
+      <div className="flex items-center gap-4 mb-2">
         <input
           type="text"
           placeholder="Search by name..."
@@ -204,6 +227,12 @@ export default function TopicTable() {
           onChange={(e) => setSearch(e.target.value)}
           className="border px-2 py-1 rounded w-1/3"
         />
+        <StatusFilterDropdown
+          statusFilter={statusfilteredtopic}
+          setStatusFilter={setStatusFilter}
+        />
+
+        <FilterDate onApply={setDateRange} />
       </div>
       {isLoading ? (
         <p>Loading...</p>
@@ -391,10 +420,17 @@ export default function TopicTable() {
             </tbody>
           </table>
           {filteredtopic.length === 0 && (
-            <div className="text-center py-8 text-gray-500">
-              {search
-                ? "No topic found matching your search."
-                : "No topic found."}
+            <div className="flex flex-col items-center justify-center py-8 text-gray-500">
+              <img
+                src={searchBg}
+                alt="No results"
+                className="w-48 h-48 object-contain mb-4 opacity-80"
+              />
+              <p>
+                {search
+                  ? "No topic found matching your search."
+                  : "No topic found."}
+              </p>
             </div>
           )}
         </div>

@@ -5,6 +5,10 @@ import { BookCheck, BookCheckIcon } from "lucide-react";
 import ContentForm from "./contentForm";
 import { useNavigate } from "@tanstack/react-router";
 import ContentEditModal from "./contentEditModule";
+import FilterDate from "../../../components/filterDate";
+import StatusFilterDropdown from "../../../components/StatusWithFilter";
+import searchBg from "../../../assets/search-bg.png";
+
 
 export default function ContentTable() {
   const [showForm, setShowForm] = useState(false);
@@ -15,6 +19,12 @@ export default function ContentTable() {
   const [openMenuId, setOpenMenuId] = useState<number | null>(null);
   const navigate = useNavigate();
   const [editId, setEditId] = useState<number | null>(null);
+  const [dateRange, setDateRange] = useState<[Date | null, Date | null]>([
+    null,
+    null,
+  ]);
+  const [startDate, endDate] = dateRange;
+  const [statusfilteredcontent, setStatusFilter] = useState<string>("All");
 
   const { data, isLoading } = useQuery({
     queryKey: ["content"],
@@ -71,6 +81,22 @@ export default function ContentTable() {
     let filteredcontent = content.filter((content) =>
       content.contentname.toLowerCase().includes(search.toLowerCase())
     );
+    if (startDate || endDate) {
+      filteredcontent = filteredcontent.filter((item) => {
+        const contentStart = parseDate(item.contentstartdate);
+        const contentEnd = parseDate(item.contentenddate);
+
+        if (startDate && contentStart < startDate) return false;
+        if (endDate && contentEnd > endDate) return false;
+
+        return true;
+      });
+    }
+    if (statusfilteredcontent !== "All") {
+      filteredcontent = filteredcontent.filter(
+        (content) => content.contentstatus === statusfilteredcontent
+      );
+    }
 
     filteredcontent.sort((a, b) => {
       let aValue = a[sortKey];
@@ -196,7 +222,7 @@ export default function ContentTable() {
           </style>
         </div>
       )}
-      <div className="mb-4">
+      <div className="flex items-center gap-4 mb-2">
         <input
           type="text"
           placeholder="Search by name..."
@@ -204,6 +230,12 @@ export default function ContentTable() {
           onChange={(e) => setSearch(e.target.value)}
           className="border px-2 py-1 rounded w-1/3"
         />
+        <StatusFilterDropdown
+          statusFilter={statusfilteredcontent}
+          setStatusFilter={setStatusFilter}
+        />
+
+        <FilterDate onApply={setDateRange} />
       </div>
 
       {isLoading ? (
@@ -403,11 +435,19 @@ export default function ContentTable() {
             </tbody>
           </table>
           {filteredcontent.length === 0 && (
-            <div className="text-center py-8 text-gray-500">
-              {search
-                ? "No content found matching your search."
-                : "No contents found."}
+            <div className="flex flex-col items-center justify-center py-8 text-gray-500">
+              <img
+                src={searchBg}
+                alt="No results"
+                className="w-48 h-48 object-contain mb-4 opacity-80"
+              />
+              <p>
+                {search
+                  ? "No content found matching your search."
+                  : "No content found."}
+              </p>
             </div>
+            
           )}
         </div>
       )}

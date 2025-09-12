@@ -296,7 +296,6 @@ export default function ProductEditModal({
           <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
             {engagementTypes.map((et: any, idx: number) => {
               const title = et.title || `Type ${idx + 1}`;
-              // Only allow checkbox if engagement with this title is active in engagements
               const isActiveInEngagements = Array.isArray(engagements)
                 ? engagements.some(
                     (eng: any) =>
@@ -304,7 +303,7 @@ export default function ProductEditModal({
                   )
                 : false;
               return (
-                <label
+                <label     
                   key={title}
                   className={`flex items-center gap-2 p-2 rounded ${
                     isActiveInEngagements ? "cursor-pointer" : "text-gray-400"

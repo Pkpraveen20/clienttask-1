@@ -16,12 +16,18 @@ import ContentTable from "../modules/global/contentModule/contentTable";
 import ProductView from "../modules/global/productModule/productView";
 import TopicView from "../modules/global/topicModule/topicView";
 import ContentView from "../modules/global/contentModule/contentView";
+import notFoundpage from "../components/notFoundpage";
 
 const rootRoute = createRootRoute({ component: App });
+const notRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/",
+  component: notFoundpage,
+});
 
 const clientRoute = createRoute({
   getParentRoute: () => rootRoute,
-  path: "/",
+  path: "/client",
   component: ClientTable,
 });
 const functionalRoute = createRoute({
@@ -96,6 +102,7 @@ const routeTree = rootRoute.addChildren([
   productViewRoute,
   topicViewRoute,
   contentViewRoute,
+  notRoute,
 ]);
 
 export const router = createRouter({ routeTree });
