@@ -8,7 +8,10 @@ import ContentEditModal from "./contentEditModule";
 import FilterDate from "../../../components/filterDate";
 import StatusFilterDropdown from "../../../components/StatusWithFilter";
 import searchBg from "../../../assets/search-bg.png";
-import { Search } from "lucide-react";
+import * as XLSX from "xlsx";
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
+import ExportMenu from "../../../components/export";
 
 export default function ContentTable() {
   const [showForm, setShowForm] = useState(false);
@@ -135,6 +138,72 @@ export default function ContentTable() {
   const filteredcontent = getFilteredSortedContent(data || []);
   const contentCount = filteredcontent.length;
 
+  const exportToExcel = () => {
+    const exportData = filteredcontent.map((c: any) => ({
+      ID: c.id,
+      Name: c.contentname,
+      Status: getStatus(c),
+
+      "Start Date": c.contentstartdate,
+      "End Date": c.contentenddate,
+      Description: c.contentdefinition,
+      "Content Product": Array.isArray(c.contentproduct)
+        ? c.contentproduct
+            .map((p: any) =>
+              typeof p === "object" ? p.label || p.value : String(p)
+            )
+            .join(", ")
+        : String(c.contentproduct || ""),
+
+      "Content Topic": Array.isArray(c.contenttopic)
+        ? c.contenttopic
+            .map((p: any) =>
+              typeof p === "object" ? p.label || p.value : String(p)
+            )
+            .join(", ")
+        : String(c.contenttopic || ""),
+    }));
+
+    const worksheet = XLSX.utils.json_to_sheet(exportData);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Content");
+    XLSX.writeFile(workbook, "Content.xlsx");
+  };
+
+  const exportToPDF = () => {
+    const doc = new jsPDF();
+    doc.text("Topic List", 14, 15);
+
+    autoTable(doc, {
+      startY: 20,
+      head: [
+        [
+          "ID",
+          "Name",
+          "Status",
+          "Start Date",
+          "End Date",
+          "Description",
+          "Content Product",
+          "Content Topic",
+        ],
+      ],
+      body: filteredcontent.map((c: any) => [
+        c.id,
+        c.contentname,
+        getStatus(c),
+        c.contentstartdate,
+        c.contentenddate,
+        c.contentdefinition,
+        c.contentproduct,
+        c.contenttopic,
+      ]),
+      styles: { fontSize: 8, cellPadding: 2 },
+    });
+
+    doc.save("Content.pdf");
+  };
+
   return (
     <div>
       <div className="flex justify-between items-center mb-4">
@@ -238,6 +307,7 @@ export default function ContentTable() {
         />
 
         <FilterDate onApply={setDateRange} />
+        <ExportMenu exportToExcel={exportToExcel} exportToPDF={exportToPDF} />
       </div>
 
       {isLoading ? (

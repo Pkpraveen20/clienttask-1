@@ -8,7 +8,10 @@ import TopicEditModal from "./topicEditModal";
 import StatusFilterDropdown from "../../../components/StatusWithFilter";
 import FilterDate from "../../../components/filterDate";
 import searchBg from "../../../assets/search-bg.png";
-import { Search } from "lucide-react";
+import * as XLSX from "xlsx";
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
+import ExportMenu from "../../../components/export";
 
 export default function TopicTable() {
   const [showForm, setShowForm] = useState(false);
@@ -132,6 +135,77 @@ export default function TopicTable() {
   const filteredtopic = getFilteredSortedRoles(data || []);
   const functionCount = filteredtopic.length;
 
+  const exportToExcel = () => {
+    const exportData = filteredtopic.map((t: any) => ({
+      ID: t.id,
+      Name: t.topicname,
+      Status: getStatus(t),
+     "Product Name": Array.isArray(t.topicproduct)
+      ? t.topicproduct
+          .map((p: any) => (typeof p === "object" ? p.label || p.value : String(p)))
+          .join(", ")
+      : String(t.topicproduct || ""),
+      "Start Date": t.topicstartdate,
+      "End Date": t.topicenddate,
+
+      "Engagement Types": Array.isArray(t.engagementTypes)
+        ? t.engagementTypes
+            .map((c: any) =>
+              typeof c === "object" ? c.label || c.value : String(c)
+            )
+            .join(", ")
+        : String(t.engagementTypes || ""),
+      Description: t.topicdescription,
+    }));
+
+    const worksheet = XLSX.utils.json_to_sheet(exportData);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Topic");
+    XLSX.writeFile(workbook, "Topic.xlsx");
+  };
+
+  const exportToPDF = () => {
+    const doc = new jsPDF();
+    doc.text("Topic List", 14, 15);
+
+    autoTable(doc, {
+      startY: 20,
+      head: [ 
+        [
+          "ID",
+          "Name",
+          "Status",
+          "Product Name",
+          "Start Date",
+          "End Date",
+          "Engagement Types",
+          "Description",
+        ],
+      ],
+      body: filteredtopic.map((t: any) => [
+        t.id,
+        t.topicname,
+        getStatus(t),
+        t.topicproduct,
+        t.topicstartdate,
+        t.topicenddate,
+
+        Array.isArray(t.engagementTypes)
+          ? t.engagementTypes
+              .map((c: any) =>
+                typeof c === "object" ? c.label || c.value : String(c)
+              )
+              .join(", ")
+          : String(t.engagementTypes || ""),
+
+        t.topicdescription,
+      ]),
+      styles: { fontSize: 8, cellPadding: 2 },
+    });
+
+    doc.save("Topic.pdf");
+  };
+
   return (
     <div>
       <div className="flex justify-between items-center mb-4">
@@ -236,6 +310,7 @@ export default function TopicTable() {
         />
 
         <FilterDate onApply={setDateRange} />
+        <ExportMenu exportToExcel={exportToExcel} exportToPDF={exportToPDF} />
       </div>
       {isLoading ? (
         <p>Loading...</p>

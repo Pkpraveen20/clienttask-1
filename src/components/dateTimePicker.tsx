@@ -140,7 +140,6 @@ export default function DateTimePicker({
                   onClick={() => !disabled && setSelectedTime(time)}
                   disabled={disabled}
                   className={`px-3 py-2 rounded-md text-sm border ${
-                    // disable the component happen here
                     disabled
                       ? "bg-gray-100 text-gray-400 border-gray-200 cursor-not-allowed"
                       : isSelected

@@ -9,14 +9,18 @@ import "react-datepicker/dist/react-datepicker.css";
 import StatusFilter from "../../../components/StatusWithFilter";
 import FilterDate from "../../../components/filterDate";
 import searchBg from "../../../assets/search-bg.png";
-import { Search } from "lucide-react";
+import * as XLSX from "xlsx";
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
+import ExportMenu from "../../../components/export";
+
 
 export default function ProductTable() {
   const [showForm, setShowForm] = useState(false);
   const [editId, setEditId] = useState<number | null>(null);
   const [search, setSearch] = useState("");
   const [sortKey, setSortKey] = useState("name");
-  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
+  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");  
   const queryClient = useQueryClient();
   const [openMenuId, setOpenMenuId] = useState<number | null>(null);
   const navigate = useNavigate();
@@ -127,6 +131,67 @@ export default function ProductTable() {
   const filteredProducts = getFilteredSortedClients(data || []);
   const ProductsCount = filteredProducts.length;
 
+  const exportToExcel = () => {
+    const exportData = filteredProducts.map((p: any) => ({
+      ID: p.id,
+      Name: p.productname,
+      Status: getStatus(p),
+      Description: p.productdescription,
+      "Engagement Types": Array.isArray(p.engagementTypes)
+        ? p.engagementTypes
+            .map((c: any) =>
+              typeof c === "object" ? c.label || c.value : String(c)
+            )
+            .join(", ")
+        : String(p.engagementTypes || ""),
+      "Start Date": p.startdate,
+      "End Date": p.enddate,
+    }));
+
+    const worksheet = XLSX.utils.json_to_sheet(exportData);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Products");
+    XLSX.writeFile(workbook, "Products.xlsx");
+  };
+
+  const exportToPDF = () => {
+    const doc = new jsPDF();
+    doc.text("Products List", 14, 15);
+
+    autoTable(doc, {
+      startY: 20,
+      head: [
+        [
+          "ID",
+          "Name",
+          "Status",
+          "Description",
+          "Engagement Types",
+          "Start Date",
+          "End Date",
+        ],
+      ],
+      body: filteredProducts.map((p: any) => [
+        p.id,
+        p.productname,
+        getStatus(p),
+        p.productdescription,
+        Array.isArray(p.engagementTypes)
+          ? p.engagementTypes
+              .map((c: any) =>
+                typeof c === "object" ? c.label || c.value : String(c)
+              )
+              .join(", ")
+          : String(p.engagementTypes || ""),
+        p.startdate,
+        p.enddate,
+      ]),
+      styles: { fontSize: 8, cellPadding: 2 },
+    });
+
+    doc.save("Products.pdf");
+  };
+
   return (
     <div>
       <div className="flex justify-between items-center mb-4">
@@ -174,14 +239,14 @@ export default function ProductTable() {
           </div>
           <style>
             {`
-                .animate-fadeIn {
-                  animation: fadeIn 0.25s ease;
-                }
-                @keyframes fadeIn {
-                  from { opacity: 0; transform: scale(0.97);}
-                  to { opacity: 1; transform: scale(1);}
-                }
-              `}
+                  .animate-fadeIn {
+                    animation: fadeIn 0.25s ease;
+                  }
+                  @keyframes fadeIn {
+                    from { opacity: 0; transform: scale(0.97);}
+                    to { opacity: 1; transform: scale(1);}
+                  }
+                `}
           </style>
         </div>
       )}
@@ -204,19 +269,19 @@ export default function ProductTable() {
           </div>
           <style>
             {`
-                .animate-fadeIn {
-                  animation: fadeIn 0.25s ease;
-                }
-                @keyframes fadeIn {
-                  from { opacity: 0; transform: scale(0.97);}
-                  to { opacity: 1; transform: scale(1);}
-                }
-              `}
+                  .animate-fadeIn {
+                    animation: fadeIn 0.25s ease;
+                  }
+                  @keyframes fadeIn {
+                    from { opacity: 0; transform: scale(0.97);}
+                    to { opacity: 1; transform: scale(1);}
+                  }
+                `}
           </style>
         </div>
       )}
       <div className="flex items-center gap-4 mb-2">
-        <div >
+        <div>
           <input
             type="text"
             placeholder="Search ..."
@@ -231,6 +296,9 @@ export default function ProductTable() {
         />
 
         <FilterDate onApply={setDateRange} />
+
+        <ExportMenu exportToExcel={exportToExcel} exportToPDF={exportToPDF} />
+
       </div>
 
       {isLoading ? (

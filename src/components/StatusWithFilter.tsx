@@ -1,3 +1,4 @@
+import { ListFilterIcon } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
 
 export default function StatusFilterDropdown({
@@ -42,9 +43,16 @@ export default function StatusFilterDropdown({
     <div className="relative" ref={dropdownRef}>
       <button
         onClick={() => setIsOpen(!isOpen)}
-          className="w-40 py-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+        className="flex items-center justify-center gap-2 w-30 py-2 px-2 
+             bg-white border border-gray-300 rounded-xl shadow-sm
+             text-sm font-medium text-gray-700
+             hover:bg-gray-50 hover:border-gray-400
+             focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1"
       >
-        ⚙️ {statusFilter === "All" ? "Filter" : `Status: ${statusFilter}`}
+        <ListFilterIcon className="w-4 h-4 " />
+        <span>
+          {statusFilter === "All" ? "Filter " : `Status: ${statusFilter}`}
+        </span>
       </button>
 
       {isOpen && (

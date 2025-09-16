@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import "react-datepicker/dist/react-datepicker.css";
 import DatePicker from "react-datepicker";
+import { Calendar } from "lucide-react";
 
 export default function FilterDate({
   onApply,
@@ -45,9 +46,13 @@ export default function FilterDate({
     <div className="relative inline-block" ref={dropdownRef}>
       <button
         onClick={() => setShowDateFilter(!showDateFilter)}
-        className="w-80 py-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-opacity-60"
+        className="flex items-center justify-center gap-2 w-30 py-2 px-2 
+             bg-white border border-gray-300 rounded-xl shadow-sm
+             text-sm font-medium text-gray-700
+             hover:bg-gray-50 hover:border-gray-400
+             focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1"
       >
-        📅{" "}
+        <Calendar className="w-4 h-4 " />{" "}
         {startDate && endDate
           ? `${startDate.toLocaleDateString()} - ${endDate.toLocaleDateString()}`
           : "Select Date Range"}
