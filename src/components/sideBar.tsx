@@ -12,6 +12,7 @@ import {
   Settings,
   ChevronLeft,
   ChevronRight,
+  FileLineChartIcon,
 } from "lucide-react";
 
 export default function Sidebar() {
@@ -133,6 +134,14 @@ export default function Sidebar() {
                 >
                   <ShieldCheck className="w-5 h-5" />
                   {isSecondaryOpen && "Permissions"}
+                </Link>
+                <Link
+                  to="/permissiongroup"
+                  className="flex items-center gap-2 hover:text-blue-600"
+                  title="permissiongroup"
+                >
+                  <FileLineChartIcon className="w-5 h-5" />
+                  {isSecondaryOpen && "permissiongroup"}
                 </Link>
               </nav>
             </>

@@ -17,6 +17,8 @@ import ProductView from "../modules/global/productModule/productView";
 import TopicView from "../modules/global/topicModule/topicView";
 import ContentView from "../modules/global/contentModule/contentView";
 import notFoundpage from "../components/notFoundpage";
+import PermissionGroupTable from "../modules/clientSetting/permissiongroup/permissionGroupTable";
+import PermissionGroupView from "../modules/clientSetting/permissiongroup/permissionGroupView";
 
 const rootRoute = createRootRoute({ component: App });
 const notRoute = createRoute({
@@ -88,6 +90,16 @@ const contentViewRoute = createRoute({
   path: "/content/$id",
   component: ContentView,
 });
+const permissionGroupRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/permissiongroup",
+  component: PermissionGroupTable,
+});
+const permissionGroupViewRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/permissiongroup/$id",
+  component: PermissionGroupView,
+});
 
 const routeTree = rootRoute.addChildren([
   clientRoute,
@@ -103,6 +115,8 @@ const routeTree = rootRoute.addChildren([
   topicViewRoute,
   contentViewRoute,
   notRoute,
+  permissionGroupRoute,
+  permissionGroupViewRoute,
 ]);
 
 export const router = createRouter({ routeTree });
