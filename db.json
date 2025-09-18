@@ -139,7 +139,7 @@
     {
       "id": "4",
       "permissionname": "novastrid",
-      "permissionstatus": "Active",
+      "permissionstatus": "Inactive",
       "permissionstartdate": "01-09-2025",
       "permissionenddate": "16-09-2025",
       "permissiondefinition": "ascas",
@@ -544,6 +544,257 @@
       "permissiongrouprole": [
         "Project Manager\t2"
       ]
+    }
+  ],
+  "vendor": [
+    {
+      "id": "1",
+      "vendorName": "praveen",
+      "vendorStatus": "Active",
+      "vendorStartDate": "01-09-2025",
+      "vendorEndDate": "17-09-2025",
+      "vendorType": "Caterer",
+      "vendorDefinition": "EOD",
+      "vendorClient": [
+        "Theta Systems"
+      ],
+      "addresses": [
+        {
+          "addressType": "Primary",
+          "city": "New York",
+          "state": "AZ",
+          "zipcode": "62500",
+          "country": "United States",
+          "phoneNumber": "1234567890",
+          "email": "prav@gamil.com"
+        }
+      ],
+      "contacts": [
+        {
+          "contactType": "Business",
+          "contactName": "praveen kumar jr",
+          "contactEmail": "praveenpk2027@gmail.com",
+          "dba": "cg",
+          "website": "http://localhost:5173/permissiongroup",
+          "facebookURL": "http://localhost:5173/permissiongroup",
+          "instagram": "http://localhost:5173/permissiongroup"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "vendorName": "praveen-1",
+      "vendorStatus": "Active",
+      "vendorStartDate": "18-09-2025",
+      "vendorEndDate": "25-09-2025",
+      "vendorType": "AV Provider",
+      "vendorDefinition": "test-1",
+      "vendorClient": [
+        "Theta Systems"
+      ],
+      "addresses": [
+        {
+          "addressType": "Primary",
+          "address1": "1762,mela anuupandi housing board maduari",
+          "address2": "kjknn",
+          "city": "Los Angeles",
+          "state": "AK",
+          "zipcode": "62500",
+          "country": "United States",
+          "phoneNumber": "822061213",
+          "email": "praveenpk2027@gmail.com"
+        },
+        {
+          "addressType": "Business",
+          "address1": "dasdf",
+          "address2": "fefqef",
+          "city": "Los Angeles",
+          "state": "",
+          "zipcode": "56955",
+          "country": "United States",
+          "phoneNumber": "02125648548",
+          "email": "sdaf@gmail.com"
+        }
+      ],
+      "contacts": [
+        {
+          "contactType": "Business",
+          "contactName": "praveen kumar jr",
+          "contactEmail": "ajay@gmail.com",
+          "dba": "cg",
+          "website": "http://localhost:5173/permissiongroup",
+          "facebookURL": "http://localhost:5173/permissiongroup",
+          "instagram": "http://localhost:5173/permissiongroup"
+        }
+      ]
+    }
+  ],
+  "citys": [
+    {
+      "id": "13",
+      "name": "New York"
+    },
+    {
+      "id": "14",
+      "name": "Los Angeles"
+    },
+    {
+      "id": "15",
+      "name": "Chicago"
+    },
+    {
+      "id": "16",
+      "name": "Houston"
+    },
+    {
+      "id": "17",
+      "name": "Phoenix"
+    },
+    {
+      "id": "18",
+      "name": "Philadelphia"
+    },
+    {
+      "id": "19",
+      "name": "San Antonio"
+    },
+    {
+      "id": "20",
+      "name": "San Diego"
+    },
+    {
+      "id": "21",
+      "name": "Dallas"
+    },
+    {
+      "id": "22",
+      "name": "San Francisco"
+    },
+    {
+      "id": "23",
+      "name": "Banglore"
+    },
+    {
+      "id": "24",
+      "name": "Mumbai"
+    },
+    {
+      "id": "87",
+      "name": "Chicago"
+    },
+    {
+      "id": "88",
+      "name": "Houston"
+    },
+    {
+      "id": "89",
+      "name": "Phoenix"
+    },
+    {
+      "id": "90",
+      "name": "Philadelphia"
+    }
+  ],
+  "addressTypes": [
+    {
+      "id": "2",
+      "name": "Primary"
+    },
+    {
+      "id": "3",
+      "name": "Business"
+    },
+    {
+      "id": "4",
+      "name": "Secondary"
+    },
+    {
+      "id": "5",
+      "name": "Billing"
+    }
+  ],
+  "contactTypes": [
+    {
+      "id": "2",
+      "name": "Business"
+    },
+    {
+      "id": "1",
+      "name": "Primary"
+    }
+  ],
+  "vendorTypes": [
+    {
+      "id": "4",
+      "name": "AV Provider"
+    },
+    {
+      "id": "3",
+      "name": "Caterer"
+    },
+    {
+      "id": "1",
+      "name": "Hotel"
+    },
+    {
+      "id": "7",
+      "name": "Institution"
+    },
+    {
+      "id": "2",
+      "name": "Restaurant"
+    },
+    {
+      "id": "5",
+      "name": "Travel Agency"
+    }
+  ],
+  "states": [
+    {
+      "id": "1",
+      "name": "AK"
+    },
+    {
+      "id": "2",
+      "name": "AZ"
+    },
+    {
+      "id": "3",
+      "name": "AR"
+    },
+    {
+      "id": "4",
+      "name": "IN"
+    },
+    {
+      "id": "5",
+      "name": "IA"
+    },
+    {
+      "id": "6",
+      "name": "KS"
+    },
+    {
+      "id": "7",
+      "name": "KY"
+    },
+    {
+      "id": "8",
+      "name": "LA"
+    },
+    {
+      "id": "9",
+      "name": "ME"
+    },
+    {
+      "id": "10",
+      "name": "MD"
+    }
+  ],
+  "countrys": [
+    {
+      "id": "1",
+      "name": "United States"
     }
   ]
 }

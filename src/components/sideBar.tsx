@@ -13,6 +13,7 @@ import {
   ChevronLeft,
   ChevronRight,
   FileLineChartIcon,
+  CarFrontIcon,
 } from "lucide-react";
 
 export default function Sidebar() {
@@ -142,6 +143,14 @@ export default function Sidebar() {
                 >
                   <FileLineChartIcon className="w-5 h-5" />
                   {isSecondaryOpen && "permissiongroup"}
+                </Link>
+                 <Link
+                  to="/vendor"
+                  className="flex items-center gap-2 hover:text-blue-600"
+                  title="vendor"
+                >
+                  <CarFrontIcon className="w-5 h-5" />
+                  {isSecondaryOpen && "vendor"}
                 </Link>
               </nav>
             </>
