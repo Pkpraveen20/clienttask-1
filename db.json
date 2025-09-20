@@ -548,78 +548,110 @@
   ],
   "vendor": [
     {
-      "id": "1",
-      "vendorName": "praveen",
+      "id": 1,
+      "vendorName": "test-1",
       "vendorStatus": "Active",
-      "vendorStartDate": "01-09-2025",
-      "vendorEndDate": "17-09-2025",
-      "vendorType": "Caterer",
-      "vendorDefinition": "EOD",
+      "vendorStartDate": "19-09-2025",
+      "vendorEndDate": "30-09-2025",
+      "vendorType": "AV Provider",
+      "vendorDefinition": "eod test-1",
       "vendorClient": [
         "Theta Systems"
       ],
-      "addresses": [
-        {
-          "addressType": "Primary",
-          "city": "New York",
-          "state": "AZ",
-          "zipcode": "62500",
-          "country": "United States",
-          "phoneNumber": "1234567890",
-          "email": "prav@gamil.com"
-        }
-      ],
+      "address1": {
+        "addressType": "Primary",
+        "address1": "1762,mela anuupandi housing board maduari",
+        "address2": "fefqef",
+        "city": "New York",
+        "state": "AK",
+        "zipcode": "625009",
+        "country": "United States",
+        "phoneNumber": "08220612136",
+        "email": "praveenpk2027@gmail.com"
+      },
+      "address2": {
+        "addressType": "Business",
+        "address1": "dasdf",
+        "address2": "fefqef",
+        "city": "Los Angeles",
+        "state": "AR",
+        "zipcode": "56955",
+        "country": "United States",
+        "phoneNumber": "02125648548",
+        "email": "sdaf@gmail.com"
+      },
+      "address3": {
+        "addressType": "",
+        "address1": "",
+        "address2": "",
+        "city": "",
+        "state": "",
+        "zipcode": "",
+        "country": "",
+        "phoneNumber": "",
+        "email": ""
+      },
       "contacts": [
         {
           "contactType": "Business",
-          "contactName": "praveen kumar jr",
-          "contactEmail": "praveenpk2027@gmail.com",
-          "dba": "cg",
-          "website": "http://localhost:5173/permissiongroup",
-          "facebookURL": "http://localhost:5173/permissiongroup",
-          "instagram": "http://localhost:5173/permissiongroup"
+          "contactName": "praveen",
+          "contactEmail": "praveenkumar58136@gmail.com",
+          "dba": "test-1",
+          "website": "http://localhost:5173/vendor",
+          "facebookURL": "http://localhost:5173/vendor",
+          "instagram": "http://localhost:5173/vendor"
         }
       ]
     },
     {
       "id": 2,
-      "vendorName": "praveen-1",
+      "vendorName": "nova-1",
       "vendorStatus": "Active",
-      "vendorStartDate": "18-09-2025",
-      "vendorEndDate": "25-09-2025",
-      "vendorType": "AV Provider",
-      "vendorDefinition": "test-1",
+      "vendorStartDate": "19-09-2025",
+      "vendorEndDate": "24-09-2025",
+      "vendorType": "Caterer",
+      "vendorDefinition": "Test-4",
       "vendorClient": [
-        "Theta Systems"
+        "Theta Systems",
+        "AeroByte Labs"
       ],
-      "addresses": [
-        {
-          "addressType": "Primary",
-          "address1": "1762,mela anuupandi housing board maduari",
-          "address2": "kjknn",
-          "city": "Los Angeles",
-          "state": "AK",
-          "zipcode": "62500",
-          "country": "United States",
-          "phoneNumber": "822061213",
-          "email": "praveenpk2027@gmail.com"
-        },
-        {
-          "addressType": "Business",
-          "address1": "dasdf",
-          "address2": "fefqef",
-          "city": "Los Angeles",
-          "state": "",
-          "zipcode": "56955",
-          "country": "United States",
-          "phoneNumber": "02125648548",
-          "email": "sdaf@gmail.com"
-        }
-      ],
+      "address1": {
+        "addressType": "Primary",
+        "address1": "dasdf",
+        "address2": "fefqef",
+        "city": "Los Angeles",
+        "state": "AZ",
+        "zipcode": "56955",
+        "country": "United States",
+        "phoneNumber": "02125648548",
+        "email": "sdaf@gmail.com"
+      },
+      "address2": {
+        "addressType": "",
+        "address1": "",
+        "address2": "",
+        "city": "",
+        "state": "",
+        "zipcode": "",
+        "country": "",
+        "phoneNumber": "",
+        "email": ""
+      },
+      "address3": {
+        "addressType": "",
+        "address1": "",
+        "address2": "",
+        "city": "",
+        "state": "",
+        "zipcode": "",
+        "country": "",
+        "phoneNumber": "",
+        "email": ""
+      },
       "contacts": [
         {
-          "contactType": "Business",
-          "contactName": "praveen kumar jr",
+          "contactType": "Primary",
+          "contactName": "nova",
           "contactEmail": "ajay@gmail.com",
           "dba": "cg",
           "website": "http://localhost:5173/permissiongroup",

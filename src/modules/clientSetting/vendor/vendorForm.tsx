@@ -1,16 +1,22 @@
 import { useState, useEffect } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
-import Select, { MultiValue, SingleValue } from "react-select";
+import Select, { MultiValue } from "react-select";
 import DateInput from "../../../components/dataPicker";
+import AddressForm from "./addressvendor";
+import ContactForm from "./contactVendor";
 
 type ClientOption = { value: string; label: string };
 type VendorTypeOption = { value: string; label: string };
-type AddressTypeOption = { value: string; label: string };
-type CityOption = { value: string; label: string };
-type StateOption = { value: string; label: string };
-type ContryOption = { value: string; label: string };
-type ContactOption = { value: string; label: string };
+type Contact = {
+  contactType: string;
+  contactName: string;
+  contactEmail: string;
+  dba: string;
+  website: string;
+  facebookURL: string;
+  instagram: string;
+};
 
 type Address = {
   addressType: string;
@@ -24,17 +30,23 @@ type Address = {
   email: string;
 };
 
-type Contact = {
-  contactType: string;
-  contactName: string;
-  contactEmail: string;
-  dba: string;
-  website: string;
-  facebookURL: string;
-  instagram: string;
-};
+function emptyAddress(): Address {
+  return {
+    addressType: "",
+    address1: "",
+    address2: "",
+    city: "",
+    state: "",
+    zipcode: "",
+    country: "",
+    phoneNumber: "",
+    email: "",
+  };
+}
 
 export default function VendorForm({ onClose }: { onClose: () => void }) {
+  const [showAddress2, setShowAddress2] = useState(false);
+  const [showAddress3, setShowAddress3] = useState(false);
   const [form, setForm] = useState<{
     vendorName: string;
     vendorStatus: string;
@@ -43,7 +55,9 @@ export default function VendorForm({ onClose }: { onClose: () => void }) {
     vendorType: VendorTypeOption | null;
     vendorDefinition: string;
     vendorClient: MultiValue<ClientOption>;
-    addresses: Address[];
+    address1: Address;
+    address2: Address;
+    address3: Address;
     contacts: Contact[];
   }>({
     vendorName: "",
@@ -53,19 +67,9 @@ export default function VendorForm({ onClose }: { onClose: () => void }) {
     vendorType: null,
     vendorDefinition: "",
     vendorClient: [],
-    addresses: [
-      {
-        addressType: "",
-        address1: "",
-        address2: "",
-        city: "",
-        state: "",
-        zipcode: "",
-        country: "",
-        phoneNumber: "",
-        email: "",
-      },
-    ],
+    address1: emptyAddress(),
+    address2: emptyAddress(),
+    address3: emptyAddress(),
     contacts: [
       {
         contactType: "",
@@ -111,7 +115,7 @@ export default function VendorForm({ onClose }: { onClose: () => void }) {
       axios.get("http://localhost:3000/states").then((res) => res.data),
   });
 
-  const { data: countrys } = useQuery({
+  const { data: countries } = useQuery({
     queryKey: ["countrys"],
     queryFn: () =>
       axios.get("http://localhost:3000/countrys").then((res) => res.data),
@@ -125,7 +129,7 @@ export default function VendorForm({ onClose }: { onClose: () => void }) {
 
   const [nextId, setNextId] = useState<number>(1);
 
-  useEffect(() => {
+  function updateNextId() {
     axios.get("http://localhost:3000/vendor").then((res) => {
       const all = res.data as any[];
       const numericIds = (Array.isArray(all) ? all : [])
@@ -133,6 +137,10 @@ export default function VendorForm({ onClose }: { onClose: () => void }) {
         .filter((n) => Number.isFinite(n)) as number[];
       setNextId((numericIds.length ? Math.max(...numericIds) : 0) + 1);
     });
+  }
+
+  useEffect(() => {
+    updateNextId();
   }, []);
 
   const createVendor = useMutation({
@@ -144,6 +152,7 @@ export default function VendorForm({ onClose }: { onClose: () => void }) {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["vendor"] });
+      updateNextId();
       onClose();
     },
   });
@@ -178,39 +187,18 @@ export default function VendorForm({ onClose }: { onClose: () => void }) {
       value: client.name,
       label: client.name,
     })) || [];
-
   const vendorTypeOptions =
-    vendorTypes?.map((vt: any) => ({
-      value: vt.name,
-      label: vt.name,
-    })) || [];
-
+    vendorTypes?.map((vt: any) => ({ value: vt.name, label: vt.name })) || [];
   const addressTypeOptions =
-    addressTypes?.map((at: any) => ({
-      value: at.name,
-      label: at.name,
-    })) || [];
-
+    addressTypes?.map((at: any) => ({ value: at.name, label: at.name })) || [];
   const cityOptions =
-    cities?.map((c: any) => ({
-      value: c.name,
-      label: c.name,
-    })) || [];
-  const StateOption =
-    states?.map((s: any) => ({
-      value: s.name,
-      label: s.name,
-    })) || [];
-  const ContryOption =
-    countrys?.map((c: any) => ({
-      value: c.name,
-      label: c.name,
-    })) || [];
-  const ContactOption =
-    contactTypes?.map((s: any) => ({
-      value: s.name,
-      label: s.name,
-    })) || [];
+    cities?.map((c: any) => ({ value: c.name, label: c.name })) || [];
+  const stateOptions =
+    states?.map((s: any) => ({ value: s.name, label: s.name })) || [];
+  const countryOptions =
+    countries?.map((c: any) => ({ value: c.name, label: c.name })) || [];
+  const contactOptions =
+    contactTypes?.map((s: any) => ({ value: s.name, label: s.name })) || [];
 
   return (
     <form
@@ -280,236 +268,103 @@ export default function VendorForm({ onClose }: { onClose: () => void }) {
       </div>
 
       <div>
-        <h3 className="font-semibold flex items-center justify-between">
-          Addresses
-          {form.addresses.length < 3 && (
+        {/* <h3 className="font-semibold">Address 1</h3> */}
+        <AddressForm
+          title="Address 1"
+          address={form.address1}
+          onChange={(updated) => setForm({ ...form, address1: updated })}
+          addressTypeOptions={addressTypeOptions}
+          cityOptions={cityOptions}
+          stateOptions={stateOptions}
+          countryOptions={countryOptions}
+        />
+      </div>
+
+      {showAddress2 ? (
+        <div>
+          <div className="flex justify-between items-center">
+            <h3 className="font-semibold">Address 2</h3>
             <button
               type="button"
-              onClick={() =>
+              className="text-red-600"
+              onClick={() => {
+                setShowAddress2(false);
                 setForm({
                   ...form,
-                  addresses: [
-                    ...form.addresses,
-                    {
-                      addressType: "",
-                      address1: "",
-                      address2: "",
-                      city: "",
-                      state: "",
-                      zipcode: "",
-                      country: "",
-                      phoneNumber: "",
-                      email: "",
-                    },
-                  ],
-                })
-              }
-              className="text-blue-600 text-sm font-medium hover:underline"
+                  address2: emptyAddress(),
+                  address3: emptyAddress(),
+                });
+                setShowAddress3(false);
+              }}
             >
-              + Add Address
+              ✕
             </button>
-          )}
-        </h3>
+          </div>
+          <AddressForm
+            title="Address 2"
+            address={form.address2}
+            onChange={(updated) => setForm({ ...form, address2: updated })}
+            addressTypeOptions={addressTypeOptions}
+            cityOptions={cityOptions}
+            stateOptions={stateOptions}
+            countryOptions={countryOptions}
+          />
+        </div>
+      ) : (
+        <button
+          type="button"
+          className="text-blue-600 underline"
+          onClick={() => setShowAddress2(true)}
+        >
+          + Add Address
+        </button>
+      )}
 
-        {form.addresses.map((addr, i) => (
-          <div key={i} className="border p-3 rounded mb-2 space-y-2 relative">
-            {i > 0 && (
+      {showAddress2 ? (
+        showAddress3 ? (
+          <div>
+            <div className="flex justify-between items-center">
+              <h3 className="font-semibold">Address 3</h3>
               <button
                 type="button"
+                className="text-red-600"
                 onClick={() => {
-                  const updated = [...form.addresses];
-                  updated.splice(i, 1);
-                  setForm({ ...form, addresses: updated });
+                  setShowAddress3(false);
+                  setForm({ ...form, address3: emptyAddress() });
                 }}
-                className="absolute top-2 right-2 text-red-500 text-sm"
               >
                 ✕
               </button>
-            )}
-
-            <Select
-              options={addressTypeOptions}
-              value={
-                addr.addressType
-                  ? { value: addr.addressType, label: addr.addressType }
-                  : null
-              }
-              onChange={(val: SingleValue<AddressTypeOption>) => {
-                const updated = [...form.addresses];
-                updated[i].addressType = val?.value || "";
-                setForm({ ...form, addresses: updated });
-              }}
-              placeholder="Select Address Type"
-            />
-            <input
-              placeholder="Address-1"
-              value={addr.address1}
-              onChange={(e) => {
-                const updated = [...form.addresses];
-                updated[i].address1 = e.target.value;
-                setForm({ ...form, addresses: updated });
-              }}
-              className="border p-2 rounded w-full"
-              required={i === 0} // first one compulsory
-            />
-            <input
-              placeholder="Address-2"
-              value={addr.address2}
-              onChange={(e) => {
-                const updated = [...form.addresses];
-                updated[i].address2 = e.target.value;
-                setForm({ ...form, addresses: updated });
-              }}
-              className="border p-2 rounded w-full"
-            />
-            <Select
-              options={cityOptions}
-              value={addr.city ? { value: addr.city, label: addr.city } : null}
-              onChange={(val: SingleValue<CityOption>) => {
-                const updated = [...form.addresses];
-                updated[i].city = val?.value || "";
-                setForm({ ...form, addresses: updated });
-              }}
-              placeholder="Select City"
-            />
-            <Select
-              options={StateOption}
-              value={
-                addr.state ? { value: addr.state, label: addr.state } : null
-              }
-              onChange={(val: SingleValue<StateOption>) => {
-                const updated = [...form.addresses];
-                updated[i].state = val?.value || "";
-                setForm({ ...form, addresses: updated });
-              }}
-              placeholder="Select State"
-            />
-            <input
-              placeholder="Zipcode"
-              value={addr.zipcode}
-              onChange={(e) => {
-                const updated = [...form.addresses];
-                updated[i].zipcode = e.target.value;
-                setForm({ ...form, addresses: updated });
-              }}
-              className="border p-2 rounded w-full"
-            />
-            <Select
-              options={ContryOption}
-              value={
-                addr.country
-                  ? { value: addr.country, label: addr.country }
-                  : null
-              }
-              onChange={(val: SingleValue<ContryOption>) => {
-                const updated = [...form.addresses];
-                updated[i].country = val?.value || "";
-                setForm({ ...form, addresses: updated });
-              }}
-              placeholder="Select Country"
-            />
-            <input
-              placeholder="Phone Number"
-              value={addr.phoneNumber}
-              onChange={(e) => {
-                const updated = [...form.addresses];
-                updated[i].phoneNumber = e.target.value;
-                setForm({ ...form, addresses: updated });
-              }}
-              className="border p-2 rounded w-full"
-            />
-            <input
-              placeholder="Email"
-              value={addr.email}
-              onChange={(e) => {
-                const updated = [...form.addresses];
-                updated[i].email = e.target.value;
-                setForm({ ...form, addresses: updated });
-              }}
-              className="border p-2 rounded w-full"
+            </div>
+            <AddressForm
+              title="Address 3"
+              address={form.address3}
+              onChange={(updated) => setForm({ ...form, address3: updated })}
+              addressTypeOptions={addressTypeOptions}
+              cityOptions={cityOptions}
+              stateOptions={stateOptions}
+              countryOptions={countryOptions}
             />
           </div>
-        ))}
-      </div>
+        ) : (
+          <button
+            type="button"
+            className="text-blue-600 underline"
+            onClick={() => setShowAddress3(true)}
+          >
+            + Add Address
+          </button>
+        )
+      ) : null}
 
       <div>
         <h3 className="font-semibold">Contacts</h3>
         {form.contacts.map((c, i) => (
-          <div key={i} className="border p-3 rounded mb-2 space-y-2">
-            <Select
-              options={ContactOption}
-              value={
-                c.contactType
-                  ? { value: c.contactType, label: c.contactType }
-                  : null
-              }
-              onChange={(val: SingleValue<ContactOption>) => {
-                const updated = [...form.contacts];
-                updated[i].contactType = val?.value || "";
-                setForm({ ...form, contacts: updated });
-              }}
-              placeholder="Select Contact Type"
-            />
-
-            <input
-              placeholder="Contact Name"
-              value={c.contactName}
-              onChange={(e) => {
-                const updated = [...form.contacts];
-                updated[i].contactName = e.target.value;
-                setForm({ ...form, contacts: updated });
-              }}
-              className="border p-2 rounded w-full"
-            />
-            <input
-              placeholder="Contact Email"
-              value={c.contactEmail}
-              onChange={(e) => {
-                const updated = [...form.contacts];
-                updated[i].contactEmail = e.target.value;
-                setForm({ ...form, contacts: updated });
-              }}
-              className="border p-2 rounded w-full"
-            />
-            <input
-              placeholder="DBA"
-              value={c.dba}
-              onChange={(e) => {
-                const updated = [...form.contacts];
-                updated[i].dba = e.target.value;
-                setForm({ ...form, contacts: updated });
-              }}
-              className="border p-2 rounded w-full"
-            />
-            <input
-              placeholder="Website"
-              value={c.website}
-              onChange={(e) => {
-                const updated = [...form.contacts];
-                updated[i].website = e.target.value;
-                setForm({ ...form, contacts: updated });
-              }}
-              className="border p-2 rounded w-full"
-            />
-            <input
-              placeholder="Facebook URL"
-              value={c.facebookURL}
-              onChange={(e) => {
-                const updated = [...form.contacts];
-                updated[i].facebookURL = e.target.value;
-                setForm({ ...form, contacts: updated });
-              }}
-              className="border p-2 rounded w-full"
-            />
-            <input
-              placeholder="Instagram"
-              value={c.instagram}
-              onChange={(e) => {
-                const updated = [...form.contacts];
-                updated[i].instagram = e.target.value;
-                setForm({ ...form, contacts: updated });
-              }}
-              className="border p-2 rounded w-full"
+          <div key={i} className=" justify-between items-center">
+            <ContactForm
+              contacts={form.contacts}
+              onChange={(updated) => setForm({ ...form, contacts: updated })}
+              contactOptions={contactOptions}
             />
           </div>
         ))}
