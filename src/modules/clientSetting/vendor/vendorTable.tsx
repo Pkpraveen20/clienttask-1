@@ -29,32 +29,22 @@ export default function VendorTable() {
   const navigate = useNavigate();
 
   const { data, isLoading } = useQuery({
-    queryKey: ["permissiongroup"],
+    queryKey: ["vendor"],
     queryFn: () =>
-      axios
-        .get("http://localhost:3000/permissiongroup")
-        .then((res) => res.data),
+      axios.get("http://localhost:3000/vendor").then((res) => res.data),
   });
   const deleteMutation = useMutation({
     mutationFn: (id: number | string) =>
-      axios.delete(`http://localhost:3000/permissiongroup/${id}`),
-    onSuccess: () =>
-      queryClient.invalidateQueries({ queryKey: ["permissiongroup"] }),
+      axios.delete(`http://localhost:3000/vendor/${id}`),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["vendor"] }),
   });
 
   const updateStatusMutation = useMutation({
-    mutationFn: ({
-      id,
-      permissiongroupstatus,
-    }: {
-      id: number;
-      permissiongroupstatus: string;
-    }) =>
-      axios.patch(`http://localhost:3000/permissiongroup/${id}`, {
-        permissiongroupstatus,
+    mutationFn: ({ id, vendorStatus }: { id: number; vendorStatus: string }) =>
+      axios.patch(`http://localhost:3000/vendor/${id}`, {
+        vendorStatus,
       }),
-    onSuccess: () =>
-      queryClient.invalidateQueries({ queryKey: ["permissiongroup"] }),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["vendor"] }),
   });
 
   function parseDate(ddmmyyyy: string): Date {
@@ -63,63 +53,53 @@ export default function VendorTable() {
   }
 
   function handleDelete(id: number) {
-    if (confirm("Are you sure you want to delete this Permission Group?")) {
+    if (confirm("Are you sure you want to delete this vendor Group?")) {
       deleteMutation.mutate(id);
     }
   }
   function handleViewDetails(id: number) {
-    navigate({ to: `/permissiongroup/${id}` });
+    navigate({ to: `/vendor/${id}` });
   }
   function handleEdit(id: number) {
     setEditId(id);
   }
 
-  function getStatus(permissiongroup: any) {
+  function getStatus(vendor: any) {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
-    const permissiongroupenddate = parseDate(
-      permissiongroup.permissiongroupenddate
-    );
-    permissiongroupenddate.setHours(0, 0, 0, 0);
+    const vendorEndDate = parseDate(vendor.vendorEndDate);
+    vendorEndDate.setHours(0, 0, 0, 0);
 
-    return permissiongroupenddate >= today ? "Active" : "Inactive";
+    return vendorEndDate >= today ? "Active" : "Inactive";
   }
 
-  function getFilteredSortedpermission(permissiongroup: any[]) {
-    let filteredpermissionGroup = permissiongroup.filter((permissiongroup) =>
-      permissiongroup.permissiongroupname
-        .toLowerCase()
-        .includes(search.toLowerCase())
+  function getFilteredSortedpermission(vendor: any[]) {
+    let filteredvendor = vendor.filter((vendor) =>
+      vendor.vendorName.toLowerCase().includes(search.toLowerCase())
     );
     if (startDate || endDate) {
-      filteredpermissionGroup = filteredpermissionGroup.filter(
-        (permissiongroup) => {
-          const prodStart = parseDate(permissiongroup.permissiongroupstartdate);
-          const prodEnd = parseDate(permissiongroup.permissiongroupenddate);
+      filteredvendor = filteredvendor.filter((vendor) => {
+        const prodStart = parseDate(vendor.vendorStartDate);
+        const prodEnd = parseDate(vendor.vendorEndDate);
 
-          if (startDate && prodStart < startDate) return false;
-          if (endDate && prodEnd > endDate) return false;
+        if (startDate && prodStart < startDate) return false;
+        if (endDate && prodEnd > endDate) return false;
 
-          return true;
-        }
-      );
+        return true;
+      });
     }
     if (statusFilterGroup !== "All") {
-      filteredpermissionGroup = filteredpermissionGroup.filter(
-        (permissiongroup) =>
-          permissiongroup.permissiongroupstatus === statusFilterGroup
+      filteredvendor = filteredvendor.filter(
+        (vendor) => vendor.vendorStatus === statusFilterGroup
       );
     }
 
-    filteredpermissionGroup.sort((a, b) => {
+    filteredvendor.sort((a, b) => {
       let aValue = a[sortKey];
       let bValue = b[sortKey];
 
-      if (
-        sortKey === "permissiongroupstartdate" ||
-        sortKey === "permissiongroupenddate"
-      ) {
+      if (sortKey === "vendorStartDate" || sortKey === "vendorEndDate") {
         aValue = parseDate(aValue);
         bValue = parseDate(bValue);
       }
@@ -129,104 +109,100 @@ export default function VendorTable() {
       return 0;
     });
 
-    return filteredpermissionGroup;
+    return filteredvendor;
   }
 
   useEffect(() => {
     if (data && Array.isArray(data)) {
-      data.forEach((permissiongroup: any) => {
-        const shouldBeActive = getStatus(permissiongroup) === "Active";
+      data.forEach((vendor: any) => {
+        const shouldBeActive = getStatus(vendor) === "Active";
         if (
-          (shouldBeActive &&
-            permissiongroup.permissiongroupstatus !== "Active") ||
-          (!shouldBeActive &&
-            permissiongroup.permissiongroupstatus !== "Inactive")
+          (shouldBeActive && vendor.vendorStatus !== "Active") ||
+          (!shouldBeActive && vendor.vendorStatus !== "Inactive")
         ) {
           updateStatusMutation.mutate({
-            id: permissiongroup.id,
-            permissiongroupstatus: shouldBeActive ? "Active" : "Inactive",
+            id: vendor.id,
+            vendorStatus: shouldBeActive ? "Active" : "Inactive",
           });
         }
       });
     }
   }, [data]);
 
-  const filteredPermissionsGroup = getFilteredSortedpermission(data || []);
-  const permissionGroupCount = filteredPermissionsGroup.length;
+  const filteredvendor = getFilteredSortedpermission(data || []);
+  const vendorCount = filteredvendor.length;
 
-   const exportToExcel = () => {
-      const exportData = filteredPermissionsGroup.map((c: any) => ({
-        ID: c.id,
-        Name: c.permissiongroupname,
-        Status: getStatus(c),
-  
-        "Start Date": c.permissiongroupstartdate,
-        "End Date": c.permissiongroupenddate,
-        Description: c.permissiongroupdefinition,
-        " Permission Name": Array.isArray(c.permissionGroupPname)
-          ? c.permissionGroupPname
-              .map((p: any) =>
-                typeof p === "object" ? p.label || p.value : String(p)
-              )
-              .join(", ")
-          : String(c.permissionGroupPname || ""),
-  
-        " Role": Array.isArray(c.permissiongrouprole)
-          ? c.permissiongrouprole
-              .map((p: any) =>
-                typeof p === "object" ? p.label || p.value : String(p)
-              )
-              .join(", ")
-          : String(c.permissiongrouprole || ""),
-      }));
-  
-      const worksheet = XLSX.utils.json_to_sheet(exportData);
-      const workbook = XLSX.utils.book_new();
-      XLSX.utils.book_append_sheet(workbook, worksheet, "permissiongroup");
-      XLSX.writeFile(workbook, "permissiongroup.xlsx");
-    };
-  
-    const exportToPDF = () => {
-      const doc = new jsPDF();
-      doc.text("Permission Group List", 14, 15);
-  
-      autoTable(doc, {
-        startY: 20,
-        head: [
-          [
-            "ID",
-            "Name",
-            "Status",
-            "Start Date",
-            "End Date",
-            "Description",
-            "Permission Name",
-            "Role",
-          ],
+  const exportToExcel = () => {
+    const exportData = filteredvendor.map((c: any) => ({
+      ID: c.id,
+      Name: c.vendorName,
+      Status: getStatus(c),
+
+      "Start Date": c.vendorStartDate,
+      "End Date": c.vendorEndDate,
+      " vendor type": Array.isArray(c.vendorType)
+        ? c.vendorType
+            .map((p: any) =>
+              typeof p === "object" ? p.label || p.value : String(p)
+            )
+            .join(", ")
+        : String(c.vendorType || ""),
+      Address: c.address1.address1,
+      City: c.address1.city,
+      State: c.address1.state,
+      zipcode: c.address1.zipcode,
+    }));
+
+    const worksheet = XLSX.utils.json_to_sheet(exportData);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "vendor");
+    XLSX.writeFile(workbook, "vendor.xlsx");
+  };
+
+  const exportToPDF = () => {
+    const doc = new jsPDF();
+    doc.text("vendor List", 14, 15);
+
+    autoTable(doc, {
+      startY: 20,
+      head: [
+        [
+          "ID",
+          "Name",
+          "Status",
+          "Start Date",
+          "End Date",
+          " vendor type",
+          "Address",
+          "City",
+          "State",
+          "zipcode",
         ],
-        body: filteredPermissionsGroup.map((c: any) => [
-          c.id,
-          c.permissiongroupname,
-          getStatus(c),
-          c.permissiongroupstartdate,
-          c.permissiongroupenddate,
-          c.permissiongroupdefinition,
-          c.permissionGroupPname,
-          c.permissiongrouprole,
-        ]),
-        styles: { fontSize: 8, cellPadding: 2 },
-      });
-  
-      doc.save("permissiongroup.pdf");
-    };
+      ],
+      body: filteredvendor.map((c: any) => [
+        c.id,
+        c.vendorName,
+        getStatus(c),
+        c.vendorStartDate,
+        c.vendorEndDate,
+        c.vendorType,
+        c.address1.address1,
+        c.address1.city,
+        c.address1.state,
+        c.address1.zipcode,
+      ]),
+      styles: { fontSize: 10, cellPadding: 2 },
+    });
+
+    doc.save("vendor.pdf");
+  };
 
   return (
     <div>
       <div className="flex justify-between items-center mb-4">
         <h2 className="flex items-center gap-2 text-2xl font-bold">
           <CarFrontIcon className="w-6 h-6" />
-          Vendor - {permissionGroupCount}{" "}
-          {permissionGroupCount !== 1 ? "" : ""}
+          Vendor - {vendorCount} {vendorCount !== 1 ? "" : ""}
         </h2>
 
         <button
@@ -251,25 +227,25 @@ export default function VendorTable() {
       </div>
 
       {showForm && (
-  <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
-    <div className="relative bg-white rounded-xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto p-8 border border-gray-100 animate-fadeIn">
-      <button
-        onClick={() => setShowForm(false)}
-        className="absolute top-4 right-4 text-gray-400 hover:text-red-500 text-2xl font-bold focus:outline-none"
-        aria-label="Close"
-      >
-        &times;
-      </button>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
+          <div className="relative bg-white rounded-xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto p-8 border border-gray-100 animate-fadeIn">
+            <button
+              onClick={() => setShowForm(false)}
+              className="absolute top-4 right-4 text-gray-400 hover:text-red-500 text-2xl font-bold focus:outline-none"
+              aria-label="Close"
+            >
+              &times;
+            </button>
 
-      <h2 className="text-2xl font-semibold mb-6 text-gray-800 flex items-center gap-2">
-        <CarFrontIcon className="w-6 h-6" />
-        Create New Vendor
-      </h2>
+            <h2 className="text-2xl font-semibold mb-6 text-gray-800 flex items-center gap-2">
+              <CarFrontIcon className="w-6 h-6" />
+              Create New Vendor
+            </h2>
 
-      <VendorForm onClose={() => setShowForm(false)} />
-    </div>
-    <style>
-      {`
+            <VendorForm onClose={() => setShowForm(false)} />
+          </div>
+          <style>
+            {`
         .animate-fadeIn {
           animation: fadeIn 0.25s ease;
         }
@@ -278,10 +254,9 @@ export default function VendorTable() {
           to { opacity: 1; transform: scale(1);}
         }
       `}
-    </style>
-  </div>
-)}
-
+          </style>
+        </div>
+      )}
 
       {/* {editId !== null && (
         <div className="fixed inset-0 z-40 flex items-center justify-center bg-black bg-opacity-40">
@@ -363,16 +338,16 @@ export default function VendorTable() {
                 <th
                   className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
                   onClick={() => {
-                    setSortKey("permissiongroupname");
+                    setSortKey("vendorName");
                     setSortOrder(
-                      sortKey === "permissiongroupname" && sortOrder === "asc"
+                      sortKey === "vendorName" && sortOrder === "asc"
                         ? "desc"
                         : "asc"
                     );
                   }}
                 >
-                  Permission Group Name{" "}
-                  {sortKey === "permissiongroupname"
+                  Vendor Name{" "}
+                  {sortKey === "vendorName"
                     ? sortOrder === "asc"
                       ? "▲"
                       : "▼"
@@ -382,16 +357,16 @@ export default function VendorTable() {
                 <th
                   className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
                   onClick={() => {
-                    setSortKey("permissiongroupstatus");
+                    setSortKey("vendorStatus");
                     setSortOrder(
-                      sortKey === "permissiongroupstatus" && sortOrder === "asc"
+                      sortKey === "vendorStatus" && sortOrder === "asc"
                         ? "desc"
                         : "asc"
                     );
                   }}
                 >
                   Status{" "}
-                  {sortKey === "permissiongroupstatus"
+                  {sortKey === "vendorStatus"
                     ? sortOrder === "asc"
                       ? "▲"
                       : "▼"
@@ -401,17 +376,16 @@ export default function VendorTable() {
                 <th
                   className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
                   onClick={() => {
-                    setSortKey("permissiongroupstartdate");
+                    setSortKey("vendorStartDate");
                     setSortOrder(
-                      sortKey === "permissiongroupstartdate" &&
-                        sortOrder === "asc"
+                      sortKey === "vendorStartDate" && sortOrder === "asc"
                         ? "desc"
                         : "asc"
                     );
                   }}
                 >
                   Start Date{" "}
-                  {sortKey === "permissiongroupstartdate"
+                  {sortKey === "vendorStartDate"
                     ? sortOrder === "asc"
                       ? "▲"
                       : "▼"
@@ -420,59 +394,74 @@ export default function VendorTable() {
                 <th
                   className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
                   onClick={() => {
-                    setSortKey("permissiongroupenddate");
+                    setSortKey("vendorEndDate");
                     setSortOrder(
-                      sortKey === "permissiongroupenddate" &&
-                        sortOrder === "asc"
+                      sortKey === "vendorEndDate" && sortOrder === "asc"
                         ? "desc"
                         : "asc"
                     );
                   }}
                 >
                   End Date{" "}
-                  {sortKey === "permissiongroupenddate"
+                  {sortKey === "vendorEndDate"
                     ? sortOrder === "asc"
                       ? "▲"
                       : "▼"
                     : ""}
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100">
-                  Definition
+                  Vendor Type
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100">
-                  Permission Name
+                  Address
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100">
-                  Role
+                  City
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100">
+                  State
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100">
+                  Zipcode
                 </th>
 
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"></th>
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
-              {filteredPermissionsGroup.map((permissiongroup: any) => (
-                <tr key={permissiongroup.id}>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    {permissiongroup.id}
-                  </td>{" "}
+              {filteredvendor.map((vendor: any) => (
+                <tr key={vendor.id}>
+                  <td className="px-6 py-4 whitespace-nowrap">{vendor.id}</td>{" "}
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    {permissiongroup.permissiongroupname}
+                    {vendor.vendorName}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    {getStatus(permissiongroup)}
+                    {getStatus(vendor)}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    {permissiongroup.permissiongroupstartdate}
+                    {vendor.vendorStartDate}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    {permissiongroup.permissiongroupenddate}
+                    {vendor.vendorEndDate}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    {permissiongroup.permissiongroupdefinition}
+                    {vendor.vendorType}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    {Array.isArray(permissiongroup.permissionGroupPname)
-                      ? permissiongroup.permissionGroupPname
+                    {vendor.address1.address1}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    {vendor.address1.city}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    {vendor.address1.state}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    {vendor.address1.zipcode}
+                  </td>
+                  {/* <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    {Array.isArray(vendor.permissionGroupPname)
+                      ? vendor.permissionGroupPname
                           .map((c: any) => {
                             if (typeof c === "object" && c !== null) {
                               return c.label || c.value || String(c);
@@ -481,11 +470,11 @@ export default function VendorTable() {
                           })
                           .filter(Boolean)
                           .join(", ")
-                      : String(permissiongroup.permissionGroupPname || "")}
+                      : String(vendor.permissionGroupPname || "")}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    {Array.isArray(permissiongroup.permissiongrouprole)
-                      ? permissiongroup.permissiongrouprole
+                    {Array.isArray(vendor.permissiongrouprole)
+                      ? vendor.permissiongrouprole
                           .map((r: any) => {
                             if (typeof r === "object" && r !== null) {
                               return r.label || r.value || String(r);
@@ -494,15 +483,13 @@ export default function VendorTable() {
                           })
                           .filter(Boolean)
                           .join(", ")
-                      : String(permissiongroup.permissiongrouprole || "")}
-                  </td>
+                      : String(vendor.permissiongrouprole || "")}
+                  </td> */}
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium relative">
                     <button
                       onClick={() =>
                         setOpenMenuId(
-                          openMenuId === permissiongroup.id
-                            ? null
-                            : permissiongroup.id
+                          openMenuId === vendor.id ? null : vendor.id
                         )
                       }
                       className="text-gray-400 hover:text-gray-600 px-2 py-1 rounded hover:bg-gray-100"
@@ -510,23 +497,22 @@ export default function VendorTable() {
                       ⋮
                     </button>
 
-                    
-                    {openMenuId === permissiongroup.id && (
+                    {openMenuId === vendor.id && (
                       <div className="absolute right-0 mt-1 w-32 bg-white border rounded shadow-md z-10">
                         <button
-                          onClick={() => handleViewDetails(permissiongroup.id)}
+                          onClick={() => handleViewDetails(vendor.id)}
                           className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                         >
                           View
                         </button>
                         <button
-                          onClick={() => handleEdit(permissiongroup.id)}
+                          onClick={() => handleEdit(vendor.id)}
                           className="block w-full text-left px-4 py-2 text-sm text-blue-700 hover:bg-blue-50"
                         >
                           Edit
                         </button>
                         <button
-                          onClick={() => handleDelete(permissiongroup.id)}
+                          onClick={() => handleDelete(vendor.id)}
                           className="block w-full text-left px-4 py-2 text-red-600 hover:bg-red-50"
                         >
                           Delete
@@ -538,11 +524,11 @@ export default function VendorTable() {
               ))}
             </tbody>
           </table>
-          {filteredPermissionsGroup.length === 0 && (
+          {filteredvendor.length === 0 && (
             <div className="text-center py-8 text-gray-500">
               {search
-                ? "No Permissions found matching your search."
-                : "No Permissions found."}
+                ? "No vendor found matching your search."
+                : "No vendor found."}
             </div>
           )}
         </div>

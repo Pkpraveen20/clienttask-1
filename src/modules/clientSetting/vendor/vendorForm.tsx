@@ -38,13 +38,13 @@ function emptyAddress(): Address {
     city: "",
     state: "",
     zipcode: "",
-    country: "",
+    country: "",   
     phoneNumber: "",
     email: "",
   };
 }
 
-export default function VendorForm({ onClose }: { onClose: () => void }) {
+export default function VendorForm({ onClose }: { onClose: () => void }) { 
   const [showAddress2, setShowAddress2] = useState(false);
   const [showAddress3, setShowAddress3] = useState(false);
   const [form, setForm] = useState<{

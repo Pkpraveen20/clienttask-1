@@ -20,6 +20,7 @@ import notFoundpage from "../components/notFoundpage";
 import PermissionGroupTable from "../modules/clientSetting/permissiongroup/permissionGroupTable";
 import PermissionGroupView from "../modules/clientSetting/permissiongroup/permissionGroupView";
 import VendorTable from "../modules/clientSetting/vendor/vendorTable";
+import VendorView from "../modules/clientSetting/vendor/vendorView";
 
 const rootRoute = createRootRoute({ component: App });
 const notRoute = createRoute({
@@ -106,6 +107,11 @@ const vendorRoute = createRoute({
   path: "/vendor",
   component: VendorTable,
 });
+const vendorViewRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/vendor/$id",
+  component: VendorView,
+});
 
 const routeTree = rootRoute.addChildren([
   clientRoute,
@@ -124,6 +130,7 @@ const routeTree = rootRoute.addChildren([
   permissionGroupRoute,
   permissionGroupViewRoute,
   vendorRoute,
+  vendorViewRoute,
 ]);
 
 export const router = createRouter({ routeTree });
