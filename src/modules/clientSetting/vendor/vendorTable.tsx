@@ -10,6 +10,7 @@ import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import ExportMenu from "../../../components/export";
 import VendorForm from "./vendorForm";
+import VendorEditModal from "./vendorEditModule";
 
 export default function VendorTable() {
   const [showForm, setShowForm] = useState(false);
@@ -258,9 +259,9 @@ export default function VendorTable() {
         </div>
       )}
 
-      {/* {editId !== null && (
-        <div className="fixed inset-0 z-40 flex items-center justify-center bg-black bg-opacity-40">
-          <div className="relative bg-white rounded-xl shadow-2xl w-full max-w-lg p-8 border border-gray-100 animate-fadeIn">
+      {editId !== null && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
+          <div className="relative bg-white rounded-xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto p-8 border border-gray-100 animate-fadeIn">
             <button
               onClick={() => setEditId(null)}
               className="absolute top-4 right-4 text-gray-400 hover:text-red-500 text-2xl font-bold focus:outline-none"
@@ -269,10 +270,10 @@ export default function VendorTable() {
               &times;
             </button>
             <h2 className="text-2xl font-semibold mb-6 text-gray-800 flex items-center gap-2">
-              <FileLineChartIcon className="w-6 h-6" />
+              <CarFrontIcon className="w-6 h-6" />
               Edit Permission Group
             </h2>
-            <PermissionGroupEditModal
+            <VendorEditModal
               id={editId}
               onClose={() => setEditId(null)}
             />
@@ -289,7 +290,7 @@ export default function VendorTable() {
             `}
           </style>
         </div>
-      )} */}
+      )}
       <div className="flex items-center gap-4 mb-2">
         <div>
           <input
