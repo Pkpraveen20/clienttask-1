@@ -16,17 +16,18 @@ import ContentTable from "../modules/global/contentModule/contentTable";
 import ProductView from "../modules/global/productModule/productView";
 import TopicView from "../modules/global/topicModule/topicView";
 import ContentView from "../modules/global/contentModule/contentView";
-import notFoundpage from "../components/notFoundpage";
 import PermissionGroupTable from "../modules/clientSetting/permissiongroup/permissionGroupTable";
 import PermissionGroupView from "../modules/clientSetting/permissiongroup/permissionGroupView";
 import VendorTable from "../modules/clientSetting/vendor/vendorTable";
 import VendorView from "../modules/clientSetting/vendor/vendorView";
+import NotFoundPage from "../components/notFoundpage";
 
 const rootRoute = createRootRoute({ component: App });
+
 const notRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: "/",
-  component: notFoundpage,
+  component: NotFoundPage,
 });
 
 const clientRoute = createRoute({
