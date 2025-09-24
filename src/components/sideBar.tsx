@@ -87,7 +87,7 @@ export default function Sidebar() {
         >
           <button
             onClick={() => setIsSecondaryOpen(!isSecondaryOpen)}
-            className="absolute -right-3 top-4 bg-white border rounded-full shadow p-1"
+            className="absolute -right-1 top-4 bg-white border rounded-full shadow p-1"
           >
             {isSecondaryOpen ? (
               <ChevronLeft className="w-4 h-4" />

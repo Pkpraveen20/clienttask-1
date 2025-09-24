@@ -22,12 +22,26 @@ import VendorTable from "../modules/clientSetting/vendor/vendorTable";
 import VendorView from "../modules/clientSetting/vendor/vendorView";
 import NotFoundPage from "../components/notFoundpage";
 
+import LoginPage from "../components/LoginPage";
+import SignUpPage from "../components/signup";
+
 const rootRoute = createRootRoute({ component: App });
 
 const notRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: "/",
   component: NotFoundPage,
+});
+
+const loginRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/login",
+  component: LoginPage,
+});
+const SignRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/signup",
+  component: SignUpPage,
 });
 
 const clientRoute = createRoute({
@@ -132,6 +146,8 @@ const routeTree = rootRoute.addChildren([
   permissionGroupViewRoute,
   vendorRoute,
   vendorViewRoute,
+  loginRoute,
+  SignRoute,
 ]);
 
 export const router = createRouter({ routeTree });

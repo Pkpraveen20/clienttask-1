@@ -51,15 +51,6 @@
       "id": "3",
       "rolename": "Officer",
       "roletype": "Technical",
-        "users": [
-          {
-            "id": "1",
-            "username": "demo",
-            "email": "demo@example.com",
-            "password": "demo123",
-            "profilePic": "profile1.png"
-          }
-        ],
       "rolestatus": "Inactive",
       "rolestartdate": "01-09-2025",
       "roleenddate": "09-09-2025",
@@ -75,12 +66,39 @@
       "roledescription": "Control of the team"
     }
   ],
+  "users": [
+    {
+      "id": "1",
+      "username": "demo",
+      "email": "demo@example.com",
+      "password": "demo123",
+      "profilePic": "profile1.png"
+    },
+    {
+      "id": "2",
+      "email": "pk@gmail.com",
+      "username": "pk",
+      "password": "123456"
+    },
+    {
+      "id": "3",
+      "email": "dk@gmail.com",
+      "username": "dk",
+      "password": "123456"
+    },
+    {
+      "id": "4",
+      "email": "ak@gmail.com",
+      "username": "ak",
+      "password": "123456"
+    }
+  ],
   "functionalarea": [
     {
       "id": "1",
       "functionalname": "Marketing",
       "functionaltype": "Core",
-      "functionalstatus": "Active",
+      "functionalstatus": "Inactive",
       "functionalstartdate": "01-09-2025",
       "functionalenddate": "17-09-2025",
       "functionaldescription": "Handles promotions and branding",
@@ -93,7 +111,7 @@
       "id": "2",
       "functionalname": "Product Development",
       "functionaltype": "Core",
-      "functionalstatus": "Active",
+      "functionalstatus": "Inactive",
       "functionalstartdate": "07-09-2025",
       "functionalenddate": "18-09-2025",
       "functionaldescription": "Handles promotions and branding 2",
@@ -448,7 +466,6 @@
       ],
       "contenttopic": [
         "QA Anayist"
-   
       ],
       "id": "1"
     },
