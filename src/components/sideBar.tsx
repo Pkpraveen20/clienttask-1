@@ -14,6 +14,7 @@ import {
   ChevronRight,
   FileLineChartIcon,
   CarFrontIcon,
+  UserCheck2Icon,
 } from "lucide-react";
 
 export default function Sidebar() {
@@ -151,6 +152,14 @@ export default function Sidebar() {
                 >
                   <CarFrontIcon className="w-5 h-5" />
                   {isSecondaryOpen && "vendor"}
+                </Link>
+                <Link
+                  to="/profile"
+                  className="flex items-center gap-2 hover:text-blue-600"
+                  title="profile"
+                >
+                  <UserCheck2Icon className="w-5 h-5" />
+                  {isSecondaryOpen && "profile"}
                 </Link>
               </nav>
             </>
