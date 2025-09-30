@@ -271,7 +271,7 @@ export default function VendorTable() {
             </button>
             <h2 className="text-2xl font-semibold mb-6 text-gray-800 flex items-center gap-2">
               <CarFrontIcon className="w-6 h-6" />
-              Edit Permission Group
+              Edit Vendor Group
             </h2>
             <VendorEditModal
               id={editId}

@@ -23,6 +23,8 @@ import VendorView from "../modules/clientSetting/vendor/vendorView";
 import NotFoundPage from "../components/notFoundpage";
 import ProfileTable from "../modules/clientSetting/profile/profileTable";
 import ProfileForm from "../modules/clientSetting/profile/profileForm";
+import ProfileView from "../modules/clientSetting/profile/profileView";
+// import ProfileEditModal from "../modules/clientSetting/profile/profileEditModule";
 
 // import LoginPage from "../components/LoginPage";
 // import SignUpPage from "../components/signup";
@@ -134,10 +136,20 @@ const profileRoute = createRoute({
   path: "/profile",
   component: ProfileTable,
 });
-// const profileCreateRoute = createRoute({
+const profileCreateRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/profilecreate",
+  component: ProfileForm,
+});
+const profileViewRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/profile/$id",
+  component: ProfileView,
+});
+// const profileEditRoute = createRoute({
 //   getParentRoute: () => rootRoute,
-//   path: "/profilecreate",
-//   component: ProfileForm,
+//   path: "/profileedit",
+//   component: ProfileEditModal,
 // });
 
 const routeTree = rootRoute.addChildren([
@@ -159,7 +171,9 @@ const routeTree = rootRoute.addChildren([
   vendorRoute,
   vendorViewRoute,
   profileRoute,
-  // profileCreateRoute,
+  profileCreateRoute,
+  profileViewRoute,
+  // profileEditRoute,
   // loginRoute,
   // SignRoute,
 ]);

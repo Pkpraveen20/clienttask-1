@@ -3,6 +3,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import Select, { MultiValue } from "react-select";
 import DateInput from "../../../components/dataPicker";
+import { useNavigate } from "@tanstack/react-router";
 
 type profileOption = { value: string; label: string };
 type functionalOption = { value: string; label: string };
@@ -10,7 +11,7 @@ type roleOption = { value: string; label: string };
 type permissionOption = { value: string; label: string };
 type pergroupOption = { value: string; label: string };
 
-export default function ProfileForm({ onClose }: { onClose: () => void }) {
+export default function ProfileForm() {
   const [step, setStep] = useState(1);
   const [form, setForm] = useState<{
     firstname: string;
@@ -49,6 +50,7 @@ export default function ProfileForm({ onClose }: { onClose: () => void }) {
   });
   const [nextId, setNextId] = useState<number>(1);
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const navigate = useNavigate();
 
   const { data: clients } = useQuery({
     queryKey: ["clients"],
@@ -104,7 +106,7 @@ export default function ProfileForm({ onClose }: { onClose: () => void }) {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["profile"] });
-      onClose();
+      navigate({ to: "/profile" });
     },
   });
   function handleChange(
@@ -186,7 +188,7 @@ export default function ProfileForm({ onClose }: { onClose: () => void }) {
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (imageError) return;
+    if (imageError || createprofile.isPending) return;
     // if (!validateStepTwo()) return;
     const formattedForm = {
       ...form,
@@ -209,7 +211,7 @@ export default function ProfileForm({ onClose }: { onClose: () => void }) {
       ).map((c) => c.value),
     };
     createprofile.mutate(formattedForm);
-    onClose();
+    navigate({ to: "/profile" });
   }
 
   const profileOptions =
@@ -238,11 +240,6 @@ export default function ProfileForm({ onClose }: { onClose: () => void }) {
         label: roles.rolename,
       })) || [];
 
-      console.log(roleOption);
-      console.log(roles);
-      
-      
-
   const permissionOption =
     permission
       ?.filter((permission: any) => permission.permissionstatus === "Active")
@@ -266,37 +263,46 @@ export default function ProfileForm({ onClose }: { onClose: () => void }) {
       onSubmit={handleSubmit}
       className="bg-white p-0 shadow-none rounded-none"
     >
-      <div className="flex items-center gap-3">
-        <div
-          className={`w-7 h-7 rounded-full flex items-center justify-center text-white text-sm ${
-            step === 1 ? "bg-blue-600" : "bg-blue-300"
-          }`}
-        >
-          1
+      <div className="flex flex-col gap-4">
+        <div className="flex items-center gap-2 text-blue-600">
+          <h1 className="text-lg font-semibold">Profile Information</h1>
         </div>
-        <span
-          className={`text-sm ${
-            step === 1 ? "text-blue-700 font-medium" : "text-gray-600"
-          }`}
-        >
-          Profile Information
-        </span>
-        <span className="text-gray-400">→</span>
-        <div
-          className={`w-7 h-7 rounded-full flex items-center justify-center text-white text-sm ${
-            step === 2 ? "bg-blue-600" : "bg-blue-300"
-          }`}
-        >
-          2
+
+        <div className="flex items-center gap-3">
+          <div
+            className={`w-7 h-7 rounded-full flex items-center justify-center text-white text-sm font-medium ${
+              step === 1 ? "bg-blue-600" : "bg-blue-300"
+            }`}
+          >
+            1
+          </div>
+          <span
+            className={`text-sm ${
+              step === 1 ? "text-blue-700 font-semibold" : "text-gray-600"
+            }`}
+          >
+            Profile Information
+          </span>
+
+          <span className="text-gray-400">→</span>
+
+          <div
+            className={`w-7 h-7 rounded-full flex items-center justify-center text-white text-sm font-medium ${
+              step === 2 ? "bg-blue-600" : "bg-blue-300"
+            }`}
+          >
+            2
+          </div>
+          <span
+            className={`text-sm ${
+              step === 2 ? "text-blue-700 font-semibold" : "text-gray-600"
+            }`}
+          >
+            Functional, Role & Permission
+          </span>
         </div>
-        <span
-          className={`text-sm ${
-            step === 2 ? "text-blue-700 font-medium" : "text-gray-600"
-          }`}
-        >
-          Functional,Role & permisssion
-        </span>
       </div>
+
       <br></br>
       {step === 1 && (
         <div className="space-y-4">
@@ -594,6 +600,13 @@ export default function ProfileForm({ onClose }: { onClose: () => void }) {
         </div>
       )}
       <div className="flex gap-3 justify-end pt-4">
+        <button
+          type="button"
+          onClick={() => navigate({ to: "/profile" })}
+          className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
+        >
+          Close
+        </button>
         {step === 2 && (
           <button
             type="button"
@@ -618,7 +631,7 @@ export default function ProfileForm({ onClose }: { onClose: () => void }) {
             disabled={createprofile.isPending}
             className="px-4 py-2 bg-green-600 text-white rounded-md disabled:opacity-50"
           >
-            {createprofile.isPending ? "Saving..." : "Save Product"}
+            {createprofile.isPending ? "Saving..." : "Save Profile"}
           </button>
         )}
       </div>
